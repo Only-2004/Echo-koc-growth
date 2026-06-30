@@ -25,7 +25,7 @@ git tag m{N}-pass
 | M6 Retro Agent | `phase-6-retro.md` | ⏳ |
 | M7 Orchestrator + Source Tagging | `phase-7-orchestrator.md` | ⏳ |
 | M8 闭环演示打磨 | `phase-8-demo.md` | ⏳ |
-| M9 腾讯云部署 | `phase-9-deploy.md` | ⏳ |
+| M9 部署 | `phase-9-deploy.md` | ⏳ |
 | M10 风险演练 | `phase-10-resilience.md` | ⏳ |
 
 ## 写作要点

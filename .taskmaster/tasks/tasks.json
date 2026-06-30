@@ -44,7 +44,7 @@
       {
         "id": "4",
         "title": "M0 · 创建 .env.example + README 本地开发指南",
-        "description": "完善根目录 .env.example（DeepSeek + 应用配置 + 腾讯云），写 README.md 描述本地开发、启动、测试流程。",
+        "description": "完善根目录 .env.example（DeepSeek + 应用配置），写 README.md 描述本地开发、启动、测试流程。",
         "details": ".env.example 已创建（PRD §9.4），需复核字段完整性。\n\nREADME.md 章节：\n- 项目简介 + 链接到 PRD\n- 本地启动：cp .env.example .env → 填 key → docker compose up（或分别启动前后端）\n- 测试：pytest backend/tests + 前端手工点测\n- 目录结构\n- 复现步骤\n\n参考：PRD §9.4 §12.1 编程要求 §readme",
         "testStrategy": "README.md 中所有命令照抄能跑通；.env.example 字段与 backend/config.py 期望一致。",
         "dependencies": [

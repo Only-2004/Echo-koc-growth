@@ -30,10 +30,6 @@ OPTIONAL = [
     ("LOG_LEVEL", "日志级别"),
     ("PORT", "后端端口"),
     ("CORS_ORIGIN", "前端允许源"),
-    ("TENCENT_SECRET_ID", "腾讯云（生产）"),
-    ("TENCENT_SECRET_KEY", "腾讯云（生产）"),
-    ("TENCENT_REGION", "腾讯云区域"),
-    ("TENCENT_COS_BUCKET", "COS bucket"),
     ("PUBLIC_BASE_URL", "公网 URL"),
 ]
 

@@ -1,8 +1,8 @@
-# M9 · 腾讯云轻量服务器生产部署 · 阶段复盘
+# M9 · 生产部署 · 阶段复盘
 
 > 完成日期：2026-05-04  
 > 分支：`feat/m9-deploy`  
-> 服务器：腾讯云轻量应用服务器（新加坡）· 43.134.72.220 · Ubuntu 22.04 · 2vCPU/4GB/60GB SSD
+> 服务器：待部署
 
 ---
 
@@ -27,7 +27,7 @@
 ## 2. 如何测试
 
 ### 前置条件
-- 腾讯云控制台防火墙放行 22/80/443
+- 防火墙放行 22/80/443
 - SSH Deploy Key 已配置（GitHub 私有仓库可拉取）
 - 服务器安装 Docker + Docker Compose
 
@@ -35,9 +35,9 @@
 
 | # | 命令 / 操作 | 预期结果 |
 |---|---|---|
-| 1 | `curl https://43-134-72-220.nip.io/nginx-health` | 返回 `ok` |
-| 2 | `curl -v https://43-134-72-220.nip.io/api/health` | HTTP/2 200，JSON body 56 bytes |
-| 3 | 浏览器开 `https://43-134-72-220.nip.io` | 地址栏锁标 + Echo 主页 |
+| 1 | `curl https://your-domain.com/nginx-health` | 返回 `ok` |
+| 2 | `curl -v https://your-domain.com/api/health` | HTTP/2 200，JSON body 56 bytes |
+| 3 | 浏览器开 `https://your-domain.com` | 地址栏锁标 + Echo 主页 |
 | 4 | `docker compose ... ps` | 三个容器全部 `Up (healthy)` |
 | 5 | `docker stats --no-stream` | backend ~65MB/1GB，nginx ~5MB，frontend ~3MB |
 | 6 | `bash /opt/beacon/deploy/backup_runtime_data.sh` | `/opt/backups/beacon/` 下生成 tar.gz |
@@ -100,7 +100,7 @@ cp .env.example .env
 
 # 4. 一键签证书 + 启动
 chmod +x deploy/init-letsencrypt.sh deploy/backup_runtime_data.sh
-bash deploy/init-letsencrypt.sh 43-134-72-220.nip.io your@email.com
+bash deploy/init-letsencrypt.sh your-domain.com your@email.com
 
 # 5. 配置备份 cron
 crontab -e

@@ -141,5 +141,5 @@ kill %1
 1. **macOS 系统默认 `python3` 是 3.9**：必须用 `python3.11` 显式创建 venv，否则 fastapi 等依赖会因为 `pyproject.toml` 限制 `>=3.11` 拒绝安装。
 2. **sandbox 禁止跨 worktree 读 `.env`**：`backend.config._load_dotenv_from_project_root` 已加 `try/except PermissionError`，遇到无权限的目录会跳过继续向上找。在主仓库正常运行时，会找到根目录 `.env`。
 3. **React 19 + TS 严格模式**：函数组件返回类型不要写 `JSX.Element`（会触发 `Cannot find namespace 'JSX'`），让 TS 自行推断或用 `React.ReactElement`。
-4. **Vite proxy 仅在 dev 生效**：生产部署需要在腾讯云网关层配置 `/api` 路由（M9 处理）。
+4. **Vite proxy 仅在 dev 生效**：生产部署需要在网关层配置 `/api` 路由（M9 处理）。
 5. **远端尚未配置**：本仓库还没有 git remote，commit 已在 `feat/m0-bootstrap` 分支，但尚未 push。设置 GitHub remote 之后即可 `git push -u origin feat/m0-bootstrap`。
