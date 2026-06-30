@@ -1,0 +1,18 @@
+任务：对用户提交的 idea 做初步语义分析，输出"它属于哪个 pillar、踩到哪些 trend 关键词、调用了 profile 中哪些 to_explore 项"。
+
+[USER_IDEA]
+{{idea_text}}
+
+[USER_PROFILE_SLICE]
+{{profile_slice_json}}
+
+[CANDIDATE_TRENDS]
+{{trends_json}}
+
+请输出一段简短中文分析（≤ 200 字），覆盖：
+1. 这条 idea 的核心命题是什么；
+2. 它最可能贴合哪个 confirmed pillar；
+3. 它能验证哪些 to_explore 假设；
+4. 它与哪些 trend 主题语义相关。
+
+不要给评分；评分由后续 SCORE 阶段完成。

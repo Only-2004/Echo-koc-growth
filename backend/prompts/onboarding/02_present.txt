@@ -1,0 +1,17 @@
+任务：把以下候选 claims 整理成一段对用户友好的"假设呈现"。
+
+[HIGH_CONFIDENCE_CLAIMS]
+{filtered_claims_json}
+
+[ONE_OPEN_QUESTION]
+{primary_open_question}
+
+要求：
+* 用"嗨小A 👋\n 我已经分析过你的 X 条视频..."开头
+* 包含 3 至 4 个核心点：覆盖至少 1 个 content_pillar、
+  1 个 persona_trait 或 life_context、1 个 to_explore 类观察
+* 每点用具体数字或具体素材支撑（"你最近 8 条里有 5 条..."）
+* 结尾用开放式确认："这些感受准确吗？哪部分需要修正？"
+* 总长度 100 至 150 字
+* 用换行 + 项目符号 ·，不用列表标签
+* 在最后一行附上 source tag，例如：[数据驱动 画像驱动]

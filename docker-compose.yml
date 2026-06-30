@@ -1,0 +1,42 @@
+version: "3.9"
+
+# Beacon · 本地一键启动
+# 用法：cp .env.example .env → 填 DEEPSEEK_API_KEY → docker compose up
+# 前端 http://localhost:5173 · 后端 http://localhost:8000
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: beacon-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app/backend
+      # 数据目录在项目根（runtime_data/, cache/），代码用 <project_root>/{runtime_data,cache} 解析路径
+      # 容器内 project_root = /app（WORKDIR），所以挂到 /app/runtime_data 与 /app/cache
+      - ./runtime_data:/app/runtime_data
+      - ./cache:/app/cache
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health').read()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: beacon-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_BASE_URL=http://backend:8000

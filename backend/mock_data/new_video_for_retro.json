@@ -1,0 +1,40 @@
+{
+  "video_id": "vid_020",
+  "title": "考研期间一日三餐怎么吃才能不困",
+  "published_at": "2026-04-26T20:00:00Z",
+  "strategy_id": "str_001",
+  "duration_sec": 62,
+  "transcript_summary": "前 3 秒展示困到趴桌画面 + 字幕「考研第 67 天」开场；中段口播三个解决方案（早餐少糖、午餐增加蛋白、下午加 b-roll 食堂打饭）；结尾收口到「考研日常」并 CTA",
+  "metrics": {
+    "plays": 29800,
+    "likes": 2214,
+    "comments": 296,
+    "shares": 99,
+    "completion_rate": 0.47,
+    "follow_rate": 0.026,
+    "new_followers": 776,
+    "new_followers_with_kaoyan_tag_ratio": 0.85
+  },
+  "drop_off_curve_points": [
+    {"t_sec": 0, "retention": 1.00},
+    {"t_sec": 3, "retention": 0.96},
+    {"t_sec": 6, "retention": 0.93},
+    {"t_sec": 9, "retention": 0.89},
+    {"t_sec": 12, "retention": 0.83},
+    {"t_sec": 18, "retention": 0.76},
+    {"t_sec": 28, "retention": 0.66},
+    {"t_sec": 40, "retention": 0.58},
+    {"t_sec": 52, "retention": 0.51},
+    {"t_sec": 62, "retention": 0.47}
+  ],
+  "comments": [
+    {"comment_id": "cmt_201", "text": "钩子很好但中间讲学习的部分太长了，第 12 秒后我跳走了", "likes": 32, "cluster": "pacing_issue"},
+    {"comment_id": "cmt_202", "text": "终于有同样在考研的博主了，关注！", "likes": 47, "cluster": "kaoyan_resonance"},
+    {"comment_id": "cmt_203", "text": "求一份考研中的三餐攻略，每天都困到不行", "likes": 36, "cluster": "kaoyan_resonance"},
+    {"comment_id": "cmt_204", "text": "便利贴的细节看哭了，太懂了", "likes": 21, "cluster": "kaoyan_resonance"},
+    {"comment_id": "cmt_205", "text": "你是不是用了 b-roll 替代口播？这种节奏更好", "likes": 18, "cluster": "production_feedback"},
+    {"comment_id": "cmt_206", "text": "干货能再具体点吗，三个方案都偏笼统", "likes": 14, "cluster": "content_request"},
+    {"comment_id": "cmt_207", "text": "希望下次拍纯食堂打饭，少讲方法多看吃", "likes": 12, "cluster": "content_request"},
+    {"comment_id": "cmt_208", "text": "原来你也是大三考研，跟我一样真好", "likes": 22, "cluster": "kaoyan_resonance"}
+  ]
+}

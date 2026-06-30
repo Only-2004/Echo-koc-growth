@@ -1,0 +1,16 @@
+{
+  "user_id": "user_a_001",
+  "computed_at": "2026-04-26T22:30:00Z",
+  "overall": {
+    "completion_rate": 0.36,
+    "follow_rate": 0.012,
+    "comment_rate": 0.0085,
+    "share_rate": 0.0024,
+    "average_plays": 18000
+  },
+  "by_pillar": {
+    "食堂探店": {"completion_rate": 0.34, "follow_rate": 0.009, "average_plays": 13700, "video_count": 4},
+    "考研日常": {"completion_rate": 0.43, "follow_rate": 0.023, "average_plays": 24800, "video_count": 4, "notes": "考研内容显著优于均值"},
+    "校园生活": {"completion_rate": 0.31, "follow_rate": 0.007, "average_plays": 11100, "video_count": 1}
+  }
+}

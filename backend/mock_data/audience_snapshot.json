@@ -1,0 +1,16 @@
+{
+  "user_id": "user_a_001",
+  "snapshot_at": "2026-04-26T22:30:00Z",
+  "demographics": {
+    "age": {"18-22": 0.62, "23-26": 0.24, "27-32": 0.10, "其他": 0.04},
+    "gender": {"female": 0.71, "male": 0.27, "其他": 0.02},
+    "region_top3": ["华东", "华北", "华南"]
+  },
+  "interest_clusters": [
+    {"cluster_id": "ic_campus", "label": "在校学生 · 校园生活", "weight": 0.42},
+    {"cluster_id": "ic_kaoyan", "label": "考研中 / 考研意向", "weight": 0.31, "notes": "近 30 天显著上升，从 vid_004 起持续增长"},
+    {"cluster_id": "ic_food", "label": "学生美食 · 实惠探店", "weight": 0.19},
+    {"cluster_id": "ic_other", "label": "泛兴趣", "weight": 0.08}
+  ],
+  "core_audience_hypothesis": "在读女大学生，关注校园生活与学业压力，部分群体明确处于考研期"
+}

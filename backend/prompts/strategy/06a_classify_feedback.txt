@@ -1,0 +1,17 @@
+任务：把用户对策略草稿的反馈分类为以下三类之一。
+
+[USER_TEXT]
+{{user_text}}
+
+输出严格 JSON：
+
+{
+  "feedback_type": "challenge | adjust | approve"
+}
+
+判定指引：
+* 用户在质疑某条建议的依据（例如"为什么 hook 要这样"、"这个评分对吗"）→ challenge
+* 用户在提具体修改要求（例如"hook 改成 X"、"pacing 慢一点"、"换个 cta"）→ adjust
+* 用户表达认可、想保存、想继续下一步（例如"行就这样"、"OK"、"提交吧"）→ approve
+
+[MARKER:refine_classify]

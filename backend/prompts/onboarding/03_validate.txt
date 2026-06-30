@@ -1,0 +1,45 @@
+任务：根据用户回复，输出对每条被提及 claim 的处理指令。
+
+[CLAIMS_PRESENTED_LAST_TURN]
+{claims_in_last_present_json}
+
+[USER_REPLY]
+{user_reply_text}
+
+请严格输出 JSON：
+
+{{
+  "actions": [
+    {{
+      "claim_id": "c001",
+      "action": "confirm",
+      "new_text": null,
+      "reason": "用户原话或意图概括"
+    }}
+  ],
+  "new_observations": [
+    {{
+      "category": "content_pillar",
+      "claim_text": "...",
+      "proposed_state": "personalized",
+      "evidence": [{{"source_type": "user_reply", "snippet": "..."}}]
+    }}
+  ],
+  "user_signals": {{
+    "fatigue_level": "none",
+    "engagement_topics": ["..."]
+  }}
+}}
+
+action 取值：confirm | modify | reject | move_to_explore | skip
+fatigue_level 取值：none | mild | strong
+
+判定指引：
+* 用户明确说"对"或确认 → confirm
+* 用户说"对但..." → modify，提取修正部分到 new_text
+* 用户说"不对" → reject
+* 用户说"还没想好"或表达犹豫 → move_to_explore
+* 用户提供新信息（新顾虑、新意向）→ 写入 new_observations
+* 短回复 / 跳过 / 要求结束 → skip 并将 fatigue_level 升级
+
+仅输出 JSON 对象，不要任何其他文字。

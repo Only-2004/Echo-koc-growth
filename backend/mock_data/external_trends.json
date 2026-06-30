@@ -1,0 +1,36 @@
+{
+  "fetched_at": "2026-04-26T22:30:00Z",
+  "platform": "douyin",
+  "trends": [
+    {
+      "trend_id": "trd_kaoyan_diet",
+      "topic": "考研一日三餐",
+      "trend_score": 0.82,
+      "direction": "rising",
+      "supply_demand_ratio": 0.7,
+      "search_volume_30d": [620, 680, 740, 820, 910, 1080, 1220, 1380, 1520, 1640, 1820, 2010, 2180],
+      "matched_keywords": ["考研中三餐", "考研不困食谱", "考研早午晚"],
+      "notes": "处于上升期，供给少于需求，存在推流红利"
+    },
+    {
+      "trend_id": "trd_campus_vlog",
+      "topic": "校园周末 vlog",
+      "trend_score": 0.55,
+      "direction": "stable",
+      "supply_demand_ratio": 1.4,
+      "search_volume_30d": [1100, 1080, 1120, 1090, 1110, 1100, 1120, 1080, 1100, 1110, 1090, 1100, 1110],
+      "matched_keywords": ["大学生周末", "宿舍 vlog"],
+      "notes": "稳定但供给过剩"
+    },
+    {
+      "trend_id": "trd_library_routine",
+      "topic": "图书馆学习党 routine",
+      "trend_score": 0.71,
+      "direction": "rising",
+      "supply_demand_ratio": 0.9,
+      "search_volume_30d": [820, 840, 870, 910, 950, 1010, 1080, 1140, 1210, 1280, 1340, 1410, 1480],
+      "matched_keywords": ["图书馆学习", "9 小时学习党", "考研习惯"],
+      "notes": "上升期，供需基本平衡"
+    }
+  ]
+}

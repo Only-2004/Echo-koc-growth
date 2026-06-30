@@ -1,0 +1,34 @@
+任务：基于热度与画像分析，生成差异化点和执行要点。
+
+[HEAT_ANALYSIS]
+{{heat_json}}
+
+[PROFILE_FIT]
+{{fit_json}}
+
+[TOP_VIDEOS_FOR_THIS_TREND]
+{{top_videos_json}}
+
+请严格输出 JSON：
+
+{
+  "differentiation": [
+    {"point": "...", "source": "画像驱动 | 趋势驱动 | 历史复盘 | 用户偏好驱动 | 数据驱动"}
+  ],
+  "execution": {
+    "hook":   {"design": "...", "rationale": "..."},
+    "pacing": "...",
+    "cta":    "...",
+    "tags":   ["..."],
+    "key_focus": "..."
+  }
+}
+
+要求：
+* differentiation 至少包含 2 条画像驱动的点（用户独有资产）
+* execution.hook 需对标 top_videos 中的开场设计
+* key_focus 用一句话指出「这次最重要看什么」，retro 阶段会重点对照（仅描述方向，例如"完播率"、"考研兴趣观众的留言占比"，不给出任何数值）
+* 不要输出对未来视频的量化指标预测（不写"预计完播 0.x"、"预计涨粉 x%" 之类）
+* tags 数量 3 至 6 个
+
+[MARKER:strategize]

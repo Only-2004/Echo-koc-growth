@@ -1,0 +1,48 @@
+任务：对用户提出的 idea 做热度匹配 + 画像贴合度评估。
+
+[USER_IDEA]
+{{idea_text}}
+
+[USER_PROFILE_SLICE]
+{{profile_slice_json}}
+
+[MATCHED_TRENDS]
+{{trends_json}}
+
+请严格输出 JSON：
+
+{
+  "heat_analysis": {
+    "trend_score": 0.0 至 1.0,
+    "trend_direction": "rising | stable | falling",
+    "supply_demand_ratio": 数值,
+    "matched_trends": ["..."],
+    "comment": "一句话评论"
+  },
+  "profile_fit": {
+    "pillar_alignment": [
+      {"pillar": "...", "alignment": "high | medium | low", "evidence": "..."}
+    ],
+    "persona_leverage": [
+      {"trait": "...", "how_to_use": "..."}
+    ],
+    "to_explore_validation": [
+      {"hypothesis_id": "...", "what_this_tests": "..."}
+    ],
+    "fit_score": 0.0 至 1.0
+  },
+  "idea_summary": {
+    "topic": "...",
+    "predicted_pillar": "...",
+    "rationale": "..."
+  }
+}
+
+判定规则：
+* fit_score 综合考虑 pillar、persona、to_explore 三方面
+* 至少识别一个 persona_leverage 点
+* 如该 idea 能验证某个 to_explore 项，必须显式列出（hypothesis_id 必填）
+* fit 与 heat 矛盾时，分别如实给出，不要为了一致性扭曲
+* alignment 三档参考：high = 与该 pillar 强相关；medium = 部分相关；low = 弱相关或不相关
+
+[MARKER:score]

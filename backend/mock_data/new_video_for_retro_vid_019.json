@@ -1,0 +1,39 @@
+{
+  "video_id": "vid_019",
+  "title": "图书馆9小时党 - 我的小习惯",
+  "published_at": "2026-04-23T20:00:00Z",
+  "strategy_id": "str_000",
+  "duration_sec": 58,
+  "transcript_summary": "开场展示图书馆空位 + 字幕「早8点占位」；中段介绍三个图书馆生存小习惯（番茄计时、零食补给、降噪耳机歌单）；结尾展示成绩单 + CTA「你们有什么习惯分享」",
+  "metrics": {
+    "plays": 19650,
+    "likes": 1388,
+    "comments": 142,
+    "shares": 38,
+    "completion_rate": 0.39,
+    "follow_rate": 0.02,
+    "new_followers": 393,
+    "new_followers_with_kaoyan_tag_ratio": 0.71
+  },
+  "drop_off_curve_points": [
+    {"t_sec": 0, "retention": 1.00},
+    {"t_sec": 3, "retention": 0.93},
+    {"t_sec": 8, "retention": 0.87},
+    {"t_sec": 14, "retention": 0.72},
+    {"t_sec": 20, "retention": 0.58},
+    {"t_sec": 28, "retention": 0.52},
+    {"t_sec": 38, "retention": 0.45},
+    {"t_sec": 48, "retention": 0.41},
+    {"t_sec": 58, "retention": 0.39}
+  ],
+  "comments": [
+    {"comment_id": "cmt_191", "text": "图书馆占位真的太难了，这个早8点方法可以的", "likes": 38, "cluster": "study_resonance"},
+    {"comment_id": "cmt_192", "text": "番茄计时法早就在用了，但是中间的零食补给这个思路好", "likes": 29, "cluster": "study_resonance"},
+    {"comment_id": "cmt_193", "text": "耳机歌单能不能分享一下？", "likes": 41, "cluster": "content_request"},
+    {"comment_id": "cmt_194", "text": "我也是图书馆9小时党！你是考研还是期末？", "likes": 24, "cluster": "study_resonance"},
+    {"comment_id": "cmt_195", "text": "中段说习惯的时候稍微有点快，没反应过来", "likes": 16, "cluster": "pacing_issue"},
+    {"comment_id": "cmt_196", "text": "成绩单那个结尾有点太刻意了，不如就拍日常", "likes": 11, "cluster": "production_feedback"},
+    {"comment_id": "cmt_197", "text": "感觉比上次三餐那个视频轻松一些，这种风格喜欢", "likes": 18, "cluster": "production_feedback"},
+    {"comment_id": "cmt_198", "text": "求博主每天图书馆 vlog！", "likes": 33, "cluster": "content_request"}
+  ]
+}

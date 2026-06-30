@@ -1,0 +1,856 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": "1",
+        "title": "M0 · 创建项目目录结构与基础配置",
+        "description": "创建前端 / 后端 / mock_data / cache / docs / scripts 等顶层目录，并初始化基础配置文件（.gitignore 完善、pyproject.toml / package.json 占位）。",
+        "details": "目录结构：\n  frontend/\n  backend/\n    agents/\n    prompts/\n    api/\n    mock_data/\n    runtime_data/\n    cache/\n    scripts/\n    tests/\n  docs/\n    phase-reports/\n  scripts/  (e2e_demo 等顶层脚本)\n\n配置：\n- 完善 .gitignore：补 .env.* / .venv / __pycache__ / dist / .DS_Store / runtime_data/ / cache/\n- backend/pyproject.toml：python>=3.11，初始空依赖\n- frontend/package.json：vite + react18 占位\n\n参考：PRD §9.1 §9.2 §12.1",
+        "testStrategy": "ls 检查所有目录存在；.gitignore 包含关键 pattern；pyproject.toml / package.json 可被解析（python -c 'import tomllib; tomllib.load(open(...))' / node -e 'JSON.parse(...)'）。",
+        "dependencies": [],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-27T10:12:44.723Z"
+      },
+      {
+        "id": "2",
+        "title": "M0 · 初始化前端（Vite + React + TS + Tailwind + Radix）",
+        "description": "在 frontend/ 下初始化 Vite + React 18 + TypeScript 项目，集成 Tailwind CSS、Radix Primitives、shadcn/ui、Lucide React、Zustand。",
+        "details": "命令：\n  cd frontend && npm create vite@latest . -- --template react-ts\n  npm i\n  npm i -D tailwindcss postcss autoprefixer\n  npx tailwindcss init -p\n  npm i lucide-react zustand\n  npm i @radix-ui/react-dialog @radix-ui/react-tabs @radix-ui/react-scroll-area @radix-ui/react-tooltip\n  # shadcn/ui 通过 npx shadcn-ui@latest init 引入，按需添加组件\n\n基础页面：vite 默认欢迎页 + 一个 health check 页（/api/health 调用）确认 proxy。\n\nVite proxy：vite.config.ts 中 server.proxy['/api'] -> http://localhost:8000\n\n参考：PRD §9.1 §12.1",
+        "testStrategy": "npm run dev 启动正常，访问 http://localhost:5173 看到欢迎页；npm run build 通过；从前端 fetch('/api/health') 能反代到后端。",
+        "dependencies": [
+          "1"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-27T10:12:47.223Z"
+      },
+      {
+        "id": "3",
+        "title": "M0 · 初始化后端（FastAPI + uvicorn + 基础目录）",
+        "description": "在 backend/ 下初始化 FastAPI 项目，配置 uvicorn、CORS、/api/health 端点、.env 加载（python-dotenv）、structlog。",
+        "details": "依赖（写入 pyproject.toml）：\n  fastapi, uvicorn[standard], sse-starlette, openai, pydantic>=2, python-dotenv, tenacity, structlog, pytest, pytest-asyncio\n\n目录：\n  backend/\n    main.py           # FastAPI app + CORS + /api/health\n    config.py         # 读 .env，提供 settings 对象\n    agents/__init__.py\n    prompts/__init__.py\n    api/__init__.py\n    mock_data/\n    runtime_data/\n    cache/\n    scripts/\n      check_env.py    # 自检脚本（不回显密钥原文）\n    tests/\n      test_health.py\n\nconfig.py 读 .env 时不要用默认值（按 CLAUDE.md 规范），缺 key 应抛 ConfigError。\n\n参考：PRD §9.2 §12.1",
+        "testStrategy": "uvicorn main:app --port 8000 启动；curl http://localhost:8000/api/health 返回 {\\\"ok\\\": true}；pytest backend/tests/test_health.py 通过；python backend/scripts/check_env.py 输出每个 key 的可达性状态（不回显原文）。",
+        "dependencies": [
+          "1"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-27T10:12:49.706Z"
+      },
+      {
+        "id": "4",
+        "title": "M0 · 创建 .env.example + README 本地开发指南",
+        "description": "完善根目录 .env.example（DeepSeek + 应用配置 + 腾讯云），写 README.md 描述本地开发、启动、测试流程。",
+        "details": ".env.example 已创建（PRD §9.4），需复核字段完整性。\n\nREADME.md 章节：\n- 项目简介 + 链接到 PRD\n- 本地启动：cp .env.example .env → 填 key → docker compose up（或分别启动前后端）\n- 测试：pytest backend/tests + 前端手工点测\n- 目录结构\n- 复现步骤\n\n参考：PRD §9.4 §12.1 编程要求 §readme",
+        "testStrategy": "README.md 中所有命令照抄能跑通；.env.example 字段与 backend/config.py 期望一致。",
+        "dependencies": [
+          "3"
+        ],
+        "status": "done",
+        "priority": "medium",
+        "subtasks": [],
+        "updatedAt": "2026-04-27T10:12:52.192Z"
+      },
+      {
+        "id": "5",
+        "title": "M0 · 创建 docker-compose.yml 一键启动",
+        "description": "编写 docker-compose.yml 同时启动前端（vite dev 5173）和后端（uvicorn 8000），通过共享网络互通。",
+        "details": "服务：\n  - backend: build ./backend, ports 8000:8000, env_file .env, volumes 挂载源码 + runtime_data\n  - frontend: build ./frontend, ports 5173:5173, depends_on backend, vite proxy /api -> http://backend:8000\n\nDockerfile（前后端各一）：\n  - backend: python:3.11-slim + pip install -e .\n  - frontend: node:20-alpine + npm ci + npm run dev\n\n参考：PRD §9.5 §12.1",
+        "testStrategy": "docker compose up 后访问 5173 看到前端，curl :8000/api/health ok，前端 fetch('/api/health') 也 ok。",
+        "dependencies": [
+          "2",
+          "3"
+        ],
+        "status": "done",
+        "priority": "medium",
+        "subtasks": [],
+        "updatedAt": "2026-04-27T10:12:54.630Z"
+      },
+      {
+        "id": "6",
+        "title": "USER-TEST · M0 项目初始化验收",
+        "description": "用户验收 M0：从零启动能跑通；产出 docs/phase-reports/phase-0-bootstrap.md 阶段复盘文档。",
+        "details": "验收清单：\n- [ ] git clone 后 cp .env.example .env，docker compose up 一次成功\n- [ ] http://localhost:5173 显示前端欢迎页\n- [ ] http://localhost:8000/api/health 返回 ok\n- [ ] python backend/scripts/check_env.py 输出无原文的状态\n- [ ] pytest backend/tests/ 全绿\n- [ ] README 步骤照抄能复现\n\n阶段复盘文档：\n  cp docs/phase-reports/TEMPLATE.md docs/phase-reports/phase-0-bootstrap.md\n  按四章节填写（做了什么 / 如何测试 / 测试结果 / 如何复现）\n  git tag m0-pass",
+        "testStrategy": "用户在主仓库 detached-HEAD 检出最新 commit，按 README 跑通；阶段复盘文档四章节齐全。",
+        "dependencies": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-27T10:12:57.076Z"
+      },
+      {
+        "id": "7",
+        "title": "M1 · 围绕小A 设计 mock_data 故事线（伏笔一致）",
+        "description": "按三份 agent spec 中的 schema，编写 mock_data/*.json 全部数据，确保 onboarding 推断 / strategy 评估 / retro 归因之间伏笔贯通。",
+        "details": "文件清单（PRD §8.1）：\n  mock_data/\n    account_snapshot.json\n    historical_videos.json       # 12-15 条，含 metrics + drop_off_curve + transcript\n    comments.json                # 每条 5-10 评论，含可被 retro EXTRACT_SIGNALS 抓到的伏笔\n    audience_snapshot.json\n    account_baseline.json\n    external_trends.json         # 2-3 候选话题趋势\n    new_video_for_retro.json     # 一条已发待复盘视频\n    onboarding_conversation_template.json\n\n伏笔关键约束：\n- 历史视频中应有 3 条提到考研，平均完播率显著高于其他垂类\n- 评论里要有「考研陪伴感」的群簇，retro 才能挖出\n- 受众假设里要有「在校 / 考研中」的潜在分群\n- new_video_for_retro 的 hook 命中、完播率不达预期、关注转化超预期 — 与 strategy snapshot 形成 strategy vs reality 对照\n\n参考：PRD §2 §8.1 + 三份 agent spec mock 数据章节",
+        "testStrategy": "所有 JSON 通过对应 pydantic schema（任务 8 完成后回归校验）；人工读 onboarding 推断 → strategy 评估 → retro 归因，伏笔逻辑能闭环。",
+        "dependencies": [
+          "3"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.735Z"
+      },
+      {
+        "id": "8",
+        "title": "M1 · pydantic / zod schema 类型定义",
+        "description": "为所有 mock 数据与 runtime 数据（profile / strategy snapshot / insights report）定义 pydantic v2 模型（后端）和 zod / TS 类型（前端）。",
+        "details": "后端（backend/schemas/）：\n  - account.py / videos.py / comments.py / audience.py / trends.py（mock）\n  - profile.py（三态 pillar + audience hypothesis + meta）\n  - strategy.py（heat_analysis / profile_fit / differentiation / execution / cta）\n  - insights.py（strategy_review / insights / audience_signals / profile_delta）\n\n前端（frontend/src/types/）：\n  对应 .ts 类型，用 zod 校验从后端拿到的数据；source tag 枚举 [\"画像驱动\", \"趋势驱动\", \"数据驱动\"]\n\n参考：PRD §8 + 三份 agent spec §4",
+        "testStrategy": "pytest backend/tests/test_schemas.py：所有 mock JSON 通过对应模型 parse；故意注入坏数据时 pydantic 抛 ValidationError；前端 zod 解析 mock fixture 通过。",
+        "dependencies": [
+          "3",
+          "7"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.740Z"
+      },
+      {
+        "id": "9",
+        "title": "M1 · 后端启动加载 mock 数据 + 调试 endpoint",
+        "description": "FastAPI 启动时把所有 mock JSON 加载进内存，提供 /api/mock/* 调试端点（生产可关闭）便于前端开发与评委审阅。",
+        "details": "实现：\n  backend/mock_loader.py：startup event 中读所有 mock_data/*.json，校验后存到 app.state.mock\n  backend/api/mock.py：路由 /api/mock/account /api/mock/videos /api/mock/comments 等\n  config.py 加 ENABLE_MOCK_DEBUG 开关（demo 默认 true，生产 false）\n\n注意：runtime_data/ 下的 profile_v{n} / strategy_snapshot / insights_report 不属于 mock，由 agent 写入。",
+        "testStrategy": "curl /api/mock/account 返回 account_snapshot.json；mock JSON 损坏时启动直接报错而非延迟；ENABLE_MOCK_DEBUG=false 时 endpoint 返回 404。",
+        "dependencies": [
+          "8"
+        ],
+        "status": "done",
+        "priority": "medium",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.742Z"
+      },
+      {
+        "id": "10",
+        "title": "USER-TEST · M1 Mock 数据与 Schema 验收",
+        "description": "用户验收 M1：mock 数据故事线、schema 校验通过；产出 phase-1-mock-schema.md 阶段复盘文档。",
+        "details": "验收清单：\n- [ ] 所有 mock JSON 通过 pydantic 校验\n- [ ] /api/mock/* 端点可用\n- [ ] 故事线伏笔一致：onboarding 推断 → strategy 评估 → retro 归因 闭环\n- [ ] frontend 端 zod 类型与后端 pydantic 字段一致（手测 1 个）\n- [ ] 阶段复盘文档四章节齐全\n  git tag m1-pass",
+        "testStrategy": "用户跑 pytest backend/tests/test_schemas.py 全绿；浏览 mock_data 故事线无逻辑断点。",
+        "dependencies": [
+          "7",
+          "8",
+          "9"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.743Z"
+      },
+      {
+        "id": "11",
+        "title": "M2 · 移植 design tokens 到 tailwind.config.ts",
+        "description": "把 frontend_design/prototype/styles/tokens.css 中的颜色 / 字体 / 圆角 / spacing 全部移植到 tailwind 主题。",
+        "details": "在 frontend/tailwind.config.ts theme.extend 下：\n  colors: { bg: { 0,1,2,3,inset }, fg: { 0,1,2,3,4 }, accent + 子色, pillar: { confirm, person, explore }, semantic: { pos, neg, warn, info } }\n  fontFamily: { sans: [Inter, PingFang SC, ...], mono: [...], serif: [...] }\n  fontSize / letterSpacing 用 README 中 display / body / kicker 三档\n  borderRadius: { sm: 6, md: 10, lg: 14, xl: 20, '2xl': 28, pill: 999 }\n  spacing 4-based scale\n\n同步在 frontend/src/styles/tokens.css 写 :root CSS variables，便于动态切 accent。\n\n参考：frontend_design/README.md §Design Tokens + PRD §16.3",
+        "testStrategy": "新建一个 PalettePreview.tsx 临时页面，渲染 100% tokens；视觉与 prototype 文件一致。",
+        "dependencies": [
+          "2"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.745Z"
+      },
+      {
+        "id": "12",
+        "title": "M2 · 实现 App Shell（3 列布局 + 导航 + 顶部条）",
+        "description": "实现 220 / 1fr / 420 三列 grid，左侧导航，顶部 sticky 条；按 hi-fi 复刻样式与 hover 状态。",
+        "details": "组件：\n  src/components/Shell.tsx       # 3 列 grid + slot\n  src/components/SideNav.tsx     # 4 nav 项 + user 卡 + locked 状态支持\n  src/components/TopBar.tsx      # kicker label + ⌘K + 「打开 AI 助手」按钮\n\nlocked 视觉：opacity 0.55 + cursor not-allowed + 锁图标，点击 no-op。\n\nTopBar 背景：rgba(250,249,246,0.85) + backdrop-blur(12px)。\n\n参考：frontend_design/prototype/components/shell.jsx + PRD §5.1-§5.3",
+        "testStrategy": "Storybook 或临时 demo 页：模拟 locked=true / false 两态；切窄屏幕看响应式（demo PC 优先即可）。",
+        "dependencies": [
+          "11"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.746Z"
+      },
+      {
+        "id": "13",
+        "title": "M2 · 实现 Chat Dock 容器（暂无对话功能）",
+        "description": "右侧 chat dock 容器（420px），可折叠（250ms 过渡），头部 + 消息列表 + composer 三段式骨架。",
+        "details": "组件：\n  src/components/ChatDock.tsx\n  src/components/chat/ChatHeader.tsx     # 显示 scene 对应 role 名\n  src/components/chat/MessageList.tsx    # 暂时渲染占位消息\n  src/components/chat/Composer.tsx       # textarea + image btn + send btn + microcopy\n\n折叠：父组件控制 chatOpen，关闭时第三列 grid-template 收到 0px + transition 250ms。\n\n暂不接 LLM，所有交互记 console.log。\n\n参考：frontend_design/prototype/components/chat-dock.jsx + PRD §5.4 §6.7",
+        "testStrategy": "点击「打开 AI 助手」chat dock 滑出；输入消息按 enter 在 console 打印；视觉与 prototype 一致。",
+        "dependencies": [
+          "12"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.748Z"
+      },
+      {
+        "id": "14",
+        "title": "M2 · Onboarding gate 路由逻辑（profileReady 锁/解锁）",
+        "description": "实现 profileReady 状态变量与 5 个 scene 路由；profileReady=false 时 profile/ideate/retro 锁死，仅 home（Empty Home 占位）和 onboard 可访问。",
+        "details": "状态管理：Zustand store\n  store/app.ts: { scene, chatOpen, profileReady, setScene, openChat, ... }\n\n路由：\n  /            -> EmptyHome（profileReady=false） / Home（true）\n  /onboard     -> Onboarding\n  /profile     -> 锁则跳 home，未锁则 Profile\n  /ideate /retro 同 profile\n\n锁判断从后端 GET /api/profile/status 返回 { exists: bool }；本地缓存到 store；首次进入查询，onboarding 完成后 setProfileReady(true)。\n\n参考：PRD §5.2 §6.1 + frontend_design/README.md Onboarding gate flow",
+        "testStrategy": "vitest 或手测：mock 后端返回 exists=false → 4 个非 home/onboard 链接显示 lock；点击无响应；手动 setProfileReady(true) 后立即解锁。",
+        "dependencies": [
+          "12",
+          "13"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.749Z"
+      },
+      {
+        "id": "15",
+        "title": "USER-TEST · M2 设计 Tokens 与 Shell 验收",
+        "description": "用户验收 M2：tokens 还原度、shell 布局、chat dock 折叠、onboarding gate 都符合预期；产出 phase-2-shell.md 复盘文档。",
+        "details": "验收清单：\n- [ ] tokens 与 prototype 视觉一致（关键色、字体、圆角对照）\n- [ ] 3 列布局 220/1fr/420 像素正确\n- [ ] Chat dock 折叠 250ms 过渡顺滑\n- [ ] Locked nav 显示锁标 + opacity 0.55\n- [ ] 5 scene URL 切换正确\n- [ ] profileReady=false 时三模块锁死\n- [ ] 阶段复盘文档四章节齐全\n  git tag m2-pass",
+        "testStrategy": "用户在主仓库 detached-HEAD 检出，对照 prototype 截图肉眼比对；切换 profileReady 看锁状态变化。",
+        "dependencies": [
+          "11",
+          "12",
+          "13",
+          "14"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.751Z"
+      },
+      {
+        "id": "16",
+        "title": "M3 · Empty Home 静态实现",
+        "description": "按 hi-fi 复刻 Empty Home：760px 居中列 + 三 locked 卡片 + 大型 primary CTA + 软性次级链接。",
+        "details": "组件：src/views/EmptyHome.tsx\n\n关键文案（必须照抄 PRD §6.1）：\n  H1: \"我先帮你建一个 KOC 画像。所有别的事都从它长出来。\"\n  Body 段落\n  CTA 卡: \"开始创建你的 KOC 画像 · 一段对话 · 大约 5 分钟 · 你随时可以暂停。\"\n  Button: \"开始对话 →\"\n\nLocked 卡片：图标 + 标题 + 1 句预览 + 锁徽章 + opacity 0.62 + dashed border。\n\n点击 primary CTA: setScene('onboard') + openChat()。\n\n参考：PRD §6.1 + prototype/components/empty-home-view.jsx",
+        "testStrategy": "肉眼对照 prototype；点击「开始对话」跳到 /onboard 且 chat dock 自动打开。",
+        "dependencies": [
+          "14"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.752Z"
+      },
+      {
+        "id": "17",
+        "title": "M3 · Onboarding view 静态实现（无 LLM）",
+        "description": "按 hi-fi 复刻 Onboarding 双列布局：左对话主面板 + 右 LIVE 信息栏；用 mock 对话脚本驱动。",
+        "details": "组件：src/views/OnboardView.tsx\n  双列 1fr / 360px\n  左：对话面板（白卡 r-xl，padding 24/28，渲染 mock 消息）\n  右：sticky LIVE 信息栏（profile ticks 列表，圆点颜色按状态：绿/琥珀/紫）\n\n顶部进度条：\"第 X 步 / 共 4 步\" + 4 小进度块。\n\nFinish CTA：~7 ticks 后 accent 横条出现「已经够了」+ \"生成画像 →\" 按钮。\n\nMock 对话：从 mock_data/onboarding_conversation_template.json 加载，按 setTimeout 逐条显示模拟流式。\n\n参考：PRD §6.2 + prototype/components/onboard-view.jsx",
+        "testStrategy": "进入 /onboard 看到双列；mock 消息按时序出现；7 ticks 后 finish CTA 显示；点 \"生成画像\" 触发 setProfileReady(true) 跳 /profile。",
+        "dependencies": [
+          "14",
+          "11"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.754Z"
+      },
+      {
+        "id": "18",
+        "title": "M3 · Profile view 静态实现",
+        "description": "按 hi-fi 实现 Profile：头部信息条 + 3 列 Pillar 网格 + 受众假设卡 + History strip。",
+        "details": "组件：src/views/ProfileView.tsx + 子组件 PillarColumn / AudienceCard / HistoryStrip\n\n3 列 Pillar：确定项（绿）/ 个性化项（琥珀）/ 待探索项（紫）；待探索 item 是 dashed border + 可点击 → onAsk('把<item>这一项展开聊聊')\n\n受众假设：full-width 卡，分群 chip size+饱和度 = 权重。\n\nHistory strip：7 个迷你柱图，标题「画像更新频次」。\n\n数据源：runtime_data/profile_v{n}.json（M2 静态阶段先用 mock_data/profile_seed.json 占位）\n\n参考：PRD §6.3 + prototype/components/profile-view.jsx",
+        "testStrategy": "渲染正确；待探索项点击触发 console.log（onAsk 接 chat 在 M7）；3 列宽度均匀。",
+        "dependencies": [
+          "14",
+          "11"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.756Z"
+      },
+      {
+        "id": "19",
+        "title": "M3 · Ideate view 静态实现（4 tabs）",
+        "description": "实现 Ideate：Idea 输入卡 + 4 tabs（评估/趋势/差异化/节奏）+ 各 tab 内容卡。",
+        "details": "组件：src/views/IdeateView.tsx + tab 子组件 EvalTab / TrendTab / DiffTab / PacingTab\n\n评估 tab：4 metric 卡（热度/贴合/差异/执行）+ FitBar 行；每卡 score + 1 句 explanation。\n趋势 tab：13 天趋势图（recharts 或简单 svg）+ 供需比。\n差异化 tab：3 角度卡。\n节奏 tab：时间轴（0s, 3s, 12s, 25s）+ 每个 beat + CTA 卡。\n\n所有卡片可点击 → onAsk('展开「<标签>」这个数据')。\n\n数据源：M2 静态阶段用 mock_data/strategy_seed.json，M5 接真 strategy_snapshot。\n\n参考：PRD §6.4 + prototype/components/ideate-view.jsx",
+        "testStrategy": "4 tabs 切换流畅；卡片点击 console.log；图表显示正确。",
+        "dependencies": [
+          "14",
+          "11"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.757Z"
+      },
+      {
+        "id": "20",
+        "title": "M3 · Retro view 静态实现",
+        "description": "实现 Retro：左侧视频列表 + Strategy vs Reality 卡 + 3 张 Insight 卡 + 评论聚类卡。",
+        "details": "组件：src/views/RetroView.tsx + 子组件 VideoList / StrategyVsReality / InsightCard / CommentClusters\n\n视频列表：最近 5 条，每行缩略图 + 标题 + 完播率 chip（低于/超出基线），active 高亮。\nStrategy vs Reality：两面板并列（dashed 假设 / solid 实际）+ 中间分割箭头。\n3 Insight 卡：标题 + 正文 + follow-up question chips（点击触发 onAsk）。\n评论聚类：4 主题聚类 + 样本评论。\n\n数据源：mock_data/insights_seed.json（M2 静态），M6 接真 insights_report。\n\n参考：PRD §6.5 + prototype/components/retro-view.jsx",
+        "testStrategy": "切换视频列表 active 状态；Insight chips 点击 console.log；Strategy vs Reality 视觉对比清晰。",
+        "dependencies": [
+          "14",
+          "11"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.759Z"
+      },
+      {
+        "id": "21",
+        "title": "M3 · Home view 静态实现",
+        "description": "实现 Home（回访）：Hero greeting + headline insight + 3 next-action 卡 + 30 天数据卡。",
+        "details": "组件：src/views/HomeView.tsx + 子组件 NextActionCard / StatsCard\n\nHero：greeting + headline（数据点用 accent 色高亮）。\n3 next-action：复盘 / 选题 / 画像更新，每卡可点 → 跳对应 scene。\n30 天数据：粉丝增长 / 总播放 / 平均完播率 / 已发视频 + sparklines。\n\n数据源：mock_data/home_summary.json（M2 静态用占位）。\n\n参考：PRD §6.6 + prototype/components/home-view.jsx",
+        "testStrategy": "进入 / 看到 Home（profileReady=true 时）；3 next-action 跳转正确。",
+        "dependencies": [
+          "14",
+          "11"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.760Z"
+      },
+      {
+        "id": "22",
+        "title": "USER-TEST · M3 5 个 Scene 静态验收",
+        "description": "用户验收 M3：5 scene UI 与 hi-fi 一致；产出 phase-3-scenes.md。",
+        "details": "验收清单：\n- [ ] 5 scene 视觉与 frontend_design/prototype 一致\n- [ ] 所有 hover 状态正确（卡片/按钮/链接）\n- [ ] chat-everything 入口已埋点（console.log onAsk）\n- [ ] tabs / 视频列表 / 待探索项交互正常\n- [ ] 阶段复盘文档四章节齐全\n  git tag m3-pass",
+        "testStrategy": "用户主仓库 detached-HEAD 检出；按 prototype 逐 scene 比对；点击所有交互点观察 console。",
+        "dependencies": [
+          "16",
+          "17",
+          "18",
+          "19",
+          "20",
+          "21"
+        ],
+        "status": "pending",
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": "23",
+        "title": "M4 · Onboarding agent 后端实现（六状态状态机 + 6 段 prompt）",
+        "description": "按 onboarding_agent_demo_spec.md 实现六状态 agent：ANALYZE / PRESENT / VALIDATE / EXPLORE / SUMMARIZE / FINALIZE，三层 memory，6 段 prompt 模板。",
+        "details": "目录：\n  backend/agents/onboarding/\n    state_machine.py    # 六状态流转\n    memory.py           # short-term + working + long-term\n    handlers.py         # 各状态 handler 调 LLM\n  backend/prompts/onboarding/\n    01_analyze.txt\n    02_present.txt\n    03_validate.txt     # 动作分类\n    04_explore.txt\n    05_summarize.txt\n    06_finalize.txt\n\n模型分配（PRD §7.2）：\n  ANALYZE -> pro-thinking\n  PRESENT/EXPLORE/SUMMARIZE -> flash-thinking（流式）\n  VALIDATE -> flash（无 thinking，分类）\n  FINALIZE -> 结构化输出 profile_v1.json，pydantic 校验，retry 1 次\n\nAPI：\n  POST /api/onboarding/start    # 触发 ANALYZE（如未缓存）\n  POST /api/onboarding/turn     # 用户输入，状态机推进\n  POST /api/onboarding/finalize # 结束，写 runtime_data/profile_v1.json\n\n参考：onboarding_agent_demo_spec.md（用户后续提供）+ PRD §6.2 §7",
+        "testStrategy": "pytest backend/tests/test_onboarding_agent.py：mock LLM 输出走完六状态；profile_v1.json 通过 pydantic 校验；动作分类 VALIDATE 至少识别 confirm / personalize / explore / skip 四类。",
+        "dependencies": [
+          "3",
+          "8",
+          "9"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.762Z"
+      },
+      {
+        "id": "24",
+        "title": "M4 · Onboarding ANALYZE 预跑脚本（cache/onb_analyze.json）",
+        "description": "实现 backend/scripts/prepare_onboarding_cache.py，跑一次 ANALYZE 把 candidate_claims 固化到 cache，演示时直接读。",
+        "details": "脚本顶部按 CLAUDE.md scripts 约定塞 sys.path。\n\n输出：cache/onb_analyze.json\n  {\n    \"generated_at\": iso,\n    \"model\": \"pro-thinking\",\n    \"candidate_claims\": [...],\n    \"draft_profile_seed\": {...}\n  }\n\nUSE_CACHED_ANALYSIS=true 时 onboarding agent 直接读此文件，不调 LLM；为 false 时实时跑。",
+        "testStrategy": "python backend/scripts/prepare_onboarding_cache.py 成功生成；onboarding /api/onboarding/start 在 USE_CACHED_ANALYSIS=true 时延迟 < 1s。",
+        "dependencies": [
+          "23"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.764Z"
+      },
+      {
+        "id": "25",
+        "title": "M4 · 前端 Onboarding view 接入 agent + LIVE 信息栏",
+        "description": "把 M3 的静态 Onboarding 接到真 onboarding agent，实时显示 LIVE 信息栏（每个 profile tick），支持流式响应。",
+        "details": "前端：\n  src/api/onboarding.ts：调 /api/onboarding/start/turn/finalize（SSE 流式 PRESENT）\n  src/views/OnboardView.tsx：消息列表订阅 SSE；右侧 LIVE rail 监听 draft_profile patch 事件实时更新\n\nSSE 事件类型：\n  - message.delta（流式 token）\n  - message.complete（含 sources[]）\n  - profile.tick（draft_profile 新增项）\n  - state.transition\n  - finish.ready（>= 7 ticks 时）\n\n点击 \"生成画像 →\"：调 /finalize，setProfileReady(true)，跳 /profile。\n\n参考：PRD §6.2 §7.3 流式输出",
+        "testStrategy": "完整跑通 onboarding：5-8 轮对话，LIVE rail 实时更新；7 ticks 后 finish CTA 出现；最终 profile_v1.json 三态俱全。",
+        "dependencies": [
+          "17",
+          "23",
+          "24"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T08:36:52.599Z"
+      },
+      {
+        "id": "26",
+        "title": "USER-TEST · M4 Onboarding Agent 验收",
+        "description": "用户走完整 onboarding 流程；产出 phase-4-onboarding.md。",
+        "details": "验收清单：\n- [ ] /onboard 走完 5-8 轮对话无报错\n- [ ] LIVE rail 实时更新 7+ ticks\n- [ ] ANALYZE 缓存模式延迟 < 1s\n- [ ] 实时 ANALYZE 模式 < 30s\n- [ ] profile_v1.json 三态俱全\n- [ ] profileReady 切换，profile/ideate/retro 解锁\n- [ ] 阶段复盘文档齐全\n  git tag m4-pass",
+        "testStrategy": "用户连续跑 3 次完整 onboarding，每次 profile_v1 都生成成功。",
+        "dependencies": [
+          "23",
+          "24",
+          "25"
+        ],
+        "status": "pending",
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": "27",
+        "title": "M5 · Strategy agent 后端实现（八状态状态机 + 6 段 prompt）",
+        "description": "按 content_strategy_agent_demo_spec.md 实现八状态 agent：RECEIVE_IDEA / ANALYZE_IDEA / GENERATE_IDEAS / SCORE / STRATEGIZE / PRESENT / REFINE / FINALIZE。",
+        "details": "目录：\n  backend/agents/strategy/state_machine.py + memory.py + handlers.py\n  backend/prompts/strategy/01-06_*.txt\n\n模型分配：\n  GENERATE_IDEAS / SCORE / STRATEGIZE -> pro-thinking（强 JSON 约束）\n  PRESENT / REFINE -> flash-thinking（流式）\n  ANALYZE_IDEA -> flash-thinking\n\nAPI：\n  POST /api/strategy/submit    # 用户提交 idea，触发 ANALYZE -> SCORE -> STRATEGIZE\n  POST /api/strategy/refine    # chat dock 内的 REFINE turn\n  GET  /api/strategy/snapshot/{id}\n\n输出：runtime_data/strategy_snapshot_{id}.json，schema 包含 heat_analysis / profile_fit / differentiation / execution(hook+pacing+cta) / sources。",
+        "testStrategy": "pytest test_strategy_agent.py：完整流走通；REFINE 至少识别 challenge / adjust / approve；snapshot JSON schema 完整。",
+        "dependencies": [
+          "3",
+          "8",
+          "23"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.765Z"
+      },
+      {
+        "id": "28",
+        "title": "M5 · Strategy SCORE + STRATEGIZE 预跑脚本",
+        "description": "实现 backend/scripts/prepare_strategy_cache.py，针对 demo 默认 idea「考研期间一日三餐怎么吃才能不困」预跑出 cache/strategy_score_strategize.json。",
+        "details": "Demo idea 固定为 PRD §13.1 中的「考研期间一日三餐怎么吃才能不困」。\n\n脚本固化 SCORE + STRATEGIZE 阶段输出，演示时 USE_CACHED_ANALYSIS=true 直接读取，避免 LLM 输出方差。\n\n实时阶段保留：ANALYZE_IDEA / PRESENT / REFINE。",
+        "testStrategy": "运行成功生成；提交默认 idea 时延迟 < 2s（缓存命中）。",
+        "dependencies": [
+          "27"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.767Z"
+      },
+      {
+        "id": "29",
+        "title": "M5 · 前端 Ideate 接入 agent + 4 tab 渲染真实 strategy snapshot",
+        "description": "把 M3 静态 Ideate 接真 strategy agent；提交 idea 后 4 tab 内容由 strategy_snapshot 驱动。",
+        "details": "  src/api/strategy.ts：submit/refine/getSnapshot\n  src/views/IdeateView.tsx：用 strategy_snapshot.heat_analysis / profile_fit / differentiation / execution 填充 4 tab\n  评估 tab：4 metric 卡分数 + FitBar 来自 profile_fit\n  趋势 tab：来自 heat_analysis.trend_curve\n  差异化 tab：differentiation.angles\n  节奏 tab：execution.hook + pacing + cta\n\n所有卡片 onAsk 进 chat dock REFINE 流（M7 完成 chat-everything 后）。",
+        "testStrategy": "提交默认 idea 后 4 tab 全部填充；点 metric 卡触发 onAsk；snapshot JSON 与 schema 一致。",
+        "dependencies": [
+          "19",
+          "27",
+          "28"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T08:36:52.603Z"
+      },
+      {
+        "id": "30",
+        "title": "M5 · Chat dock 中的 Strategy REFINE 流",
+        "description": "实现 chat dock 内的 REFINE 子流：用户对 strategy 提出 challenge / adjust，agent 流式回复并解释取舍。",
+        "details": "REFINE 用例：\n  - challenge: \"hook 设计太苦情，能不能轻松一点\"\n  - adjust:    \"如果做成 vlog 而不是纪录片呢\"\n  - approve:   \"就按这个执行\"\n\n后端 REFINE handler 用 flash-thinking 流式输出，必须带 source tags。\n\n前端把 chat dock 的 send 调到 /api/strategy/refine 路由（仅在 scene=ideate 时）。",
+        "testStrategy": "三类 user 反馈各跑一次，agent 输出有 source tag、回应合理；snapshot 不被覆盖（REFINE 只产生新消息，approve 时才落库）。",
+        "dependencies": [
+          "27",
+          "29",
+          "13"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T08:36:52.606Z"
+      },
+      {
+        "id": "31",
+        "title": "USER-TEST · M5 Strategy Agent 验收",
+        "description": "用户提交 idea 走通完整 ideate 流程；产出 phase-5-strategy.md。",
+        "details": "验收清单：\n- [ ] 提交默认 idea，4 tab 全部填充正确\n- [ ] 4 metric 卡分数 + FitBar 行可读\n- [ ] REFINE 至少跑通 challenge + adjust 两类\n- [ ] 每条 AI 回复都带 source tag\n- [ ] strategy_snapshot.json 字段完整\n- [ ] 阶段复盘文档齐全\n  git tag m5-pass",
+        "testStrategy": "用户连续跑 3 次 idea 提交 + REFINE，无报错。",
+        "dependencies": [
+          "27",
+          "28",
+          "29",
+          "30"
+        ],
+        "status": "pending",
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": "32",
+        "title": "M6 · Retro agent 后端实现（九状态状态机 + 8 段 prompt）",
+        "description": "按 retro_insight_agent_demo_spec.md 实现九状态 agent：LOAD / COMPARE / ATTRIBUTE / EXTRACT_SIGNALS / SYNTHESIZE / PRESENT / DRILL / UPDATE_PROFILE / FINALIZE。",
+        "details": "目录：\n  backend/agents/retro/state_machine.py + memory.py + handlers.py\n  backend/prompts/retro/01-08_*.txt\n\n模型分配：\n  COMPARE / ATTRIBUTE -> pro-thinking\n  EXTRACT_SIGNALS -> flash-thinking（评论聚类）\n  SYNTHESIZE -> pro-thinking（结构化 JSON）\n  PRESENT / DRILL / UPDATE_PROFILE -> flash-thinking 流式\n\nAPI：\n  POST /api/retro/load/{video_id}\n  POST /api/retro/drill              # chat dock 深度追问\n  POST /api/retro/update-profile     # 写 runtime_data/profile_v2.json (含 profile_delta)\n  GET  /api/retro/report/{id}\n\n输出：insights_report.json（strategy_review / insights / audience_signals / profile_delta）。",
+        "testStrategy": "pytest test_retro_agent.py：完整流跑通；profile_delta 正确合并到 profile_v1 生成 v2；至少 1 轮 DRILL 处理 \"为什么会在第 12 秒掉\" 类追问。",
+        "dependencies": [
+          "3",
+          "8",
+          "27"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.768Z"
+      },
+      {
+        "id": "33",
+        "title": "M6 · Retro COMPARE+ATTRIBUTE+EXTRACT_SIGNALS+SYNTHESIZE 预跑脚本",
+        "description": "实现 backend/scripts/prepare_retro_cache.py，针对 mock new_video_for_retro 预跑四阶段输出，固化到 cache/retro_synthesis.json。",
+        "details": "Demo 演示视频固定为 mock_data/new_video_for_retro.json。\n\n脚本固化的 stage：COMPARE / ATTRIBUTE / EXTRACT_SIGNALS / SYNTHESIZE。\n实时阶段保留：PRESENT / DRILL / UPDATE_PROFILE。",
+        "testStrategy": "脚本运行成功；进入 retro 时延迟 < 2s。",
+        "dependencies": [
+          "32"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T02:48:51.770Z"
+      },
+      {
+        "id": "34",
+        "title": "M6 · 前端 Retro 接入 agent + Strategy vs Reality + Insights",
+        "description": "把 M3 静态 Retro 接真 retro agent；Strategy vs Reality 卡、3 张 Insight 卡、评论聚类卡都由 insights_report 驱动。",
+        "details": "  src/api/retro.ts：load/drill/updateProfile/getReport\n  src/views/RetroView.tsx：\n    - StrategyVsReality 用 report.strategy_review（dashed 假设 / solid 实际）\n    - InsightCard 取 report.insights 中 confidence top 3\n    - CommentClusters 用 report.audience_signals.clusters\n\n从 ideate 提交完成后，自动跳 /retro 并 load 默认 video_id（PRD §6.5 demo 优化）。",
+        "testStrategy": "进入 retro 看到完整 strategy vs reality 对比；3 insight 卡有 follow-up chips；评论聚类 4 主题。",
+        "dependencies": [
+          "20",
+          "32",
+          "33"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T08:36:52.608Z"
+      },
+      {
+        "id": "35",
+        "title": "M6 · DRILL 流程 + UPDATE_PROFILE 写 profile_v2",
+        "description": "实现 chat dock 内的 DRILL 子流（点 Insight follow-up chip）+ 复盘结束后 UPDATE_PROFILE 把 delta 写回画像形成 v2。",
+        "details": "DRILL：\n  从 Insight chip 进 chat dock，scene=retro 时 send 调 /api/retro/drill\n  agent 沿 evidence 链回答（必须有 source tag）\n\nUPDATE_PROFILE：\n  retro view 底部「写回画像」按钮 → /api/retro/update-profile → merge profile_delta 到 profile_v1 → 写 profile_v2.json\n  profile view 检测到新版本，显示 \"画像已更新\" toast + History strip +1\n\n参考：PRD §6.5 §13.2 \"闭环\" 话术",
+        "testStrategy": "至少跑 1 轮 DRILL：点 \"为什么会在第 12 秒掉\" → agent 回答带 source；点写回画像 → profile_v2 生成，profile view 显示 v2 内容。",
+        "dependencies": [
+          "32",
+          "34",
+          "13"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T08:36:52.610Z"
+      },
+      {
+        "id": "36",
+        "title": "USER-TEST · M6 Retro Agent 验收（闭环跑通）",
+        "description": "用户走通从 ideate 到 retro 到回写画像的完整闭环；产出 phase-6-retro.md。",
+        "details": "验收清单：\n- [ ] ideate 提交后自动跳 retro\n- [ ] Strategy vs Reality 对比可读\n- [ ] 3 Insight 卡 confidence 顺序合理\n- [ ] 至少 1 轮 DRILL 成功\n- [ ] profile_delta 正确写入，profile_v2 生成\n- [ ] profile view 显示 v2 + History strip +1\n- [ ] 阶段复盘文档齐全\n  git tag m6-pass",
+        "testStrategy": "用户连续跑 3 次完整闭环（onboard → ideate → retro → profile v2），各步成功。",
+        "dependencies": [
+          "32",
+          "33",
+          "34",
+          "35"
+        ],
+        "status": "pending",
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": "37",
+        "title": "M7 · Orchestrator agent 实现（chat dock 路由层）",
+        "description": "实现 chat dock 通用对话 agent：根据当前 scene + 点击元素构造 system prompt，注入相关数据切片，流式响应。",
+        "details": "  backend/agents/orchestrator/router.py：\n    - 输入：{scene, focused_element?, user_text, chat_history}\n    - 根据 scene 选 role：home -> 「今天我能帮你做什么」/ profile -> 「画像编辑器」/ ideate -> 「选题顾问」/ retro -> 「复盘分析师」\n    - 拼数据切片：profile_slice / strategy_snapshot / insights_report\n    - 调 flash-thinking，强制 JSON {text, sources[], suggestions[]?}\n  backend/api/orchestrator.py：\n    POST /api/orchestrator/chat（SSE）\n\n关键：每条响应必须至少 1 个 source tag，后端 JSON 校验失败 retry 1 次后回退到保底。",
+        "testStrategy": "test_orchestrator.py：mock 4 个 scene 的 chat 输入，每条响应都包含 sources[]；强制返回无 source 时 retry 后用保底响应。",
+        "dependencies": [
+          "3",
+          "23",
+          "27",
+          "32"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T08:36:52.612Z"
+      },
+      {
+        "id": "38",
+        "title": "M7 · Source tag 强约束 + 后端校验 + 前端 chip 渲染",
+        "description": "把 source tag 作为 AiMessage 一等字段，前端按颜色 chip（绿/蓝/琥珀）渲染；后端在所有 agent 响应处校验。",
+        "details": "schema：\n  AiMessage = { role: 'ai', text, sources: [\"画像驱动\" | \"趋势驱动\" | \"数据驱动\"], suggestions?: [] }\n\n前端：\n  src/components/chat/SourceChips.tsx：渲染颜色 chip\n    画像驱动 -> --pillar-confirm（绿）\n    趋势驱动 -> --info（蓝）\n    数据驱动 -> --warn（琥珀）\n\n后端中间件：所有 agent 在最终输出前调 validate_sources(msg)，无 tag 时 raise 并 retry 1 次。\n\n参考：PRD §6.7 §7.3",
+        "testStrategy": "vitest 渲染 SourceChips 三色正确；pytest 校验中间件：故意返回无 source -> retry -> 仍无 -> 抛 ValidationError。",
+        "dependencies": [
+          "37"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T08:36:52.614Z"
+      },
+      {
+        "id": "39",
+        "title": "M7 · chat-everything 接入：所有可点击元素调 onAsk",
+        "description": "把 M3-M6 中所有 onAsk 占位（profile 待探索项 / ideate 评估卡 / retro insight chip / suggestions 等）真正连到 orchestrator chat。",
+        "details": "前端：\n  src/store/chat.ts：onAsk(text) -> 打开 chat dock + append user turn + 调 /api/orchestrator/chat（SSE）\n\n接入点：\n  - Profile：待探索项 dashed item\n  - Ideate：4 metric 卡 + FitBar 行 + tab 内容卡\n  - Retro：3 Insight 卡的 follow-up chips + 评论聚类\n  - Home：next-action 卡（点击直接跳 scene 而非 chat，但保留 onAsk 用于 \"为什么推荐\" 类追问）\n  - Suggestions：每条 AI 消息附带 suggestion chip 点击作为新 user turn 提交",
+        "testStrategy": "5 scene 中每个可点击元素都跑一次：chat dock 自动打开 + 用户 turn append + AI 回复带 source tag。",
+        "dependencies": [
+          "37",
+          "38",
+          "18",
+          "19",
+          "20",
+          "21"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T08:36:52.616Z"
+      },
+      {
+        "id": "40",
+        "title": "USER-TEST · M7 Orchestrator + Source Tagging 验收",
+        "description": "用户验收 M7：每条 AI 消息有 source tag，所有可点击元素都能进 chat；产出 phase-7-orchestrator.md。",
+        "details": "验收清单：\n- [ ] 5 scene 内任意元素点击都进 chat 并得到 source-tagged 回复\n- [ ] 三色 chip 渲染正确\n- [ ] suggestion chip 点击作为新 turn 提交\n- [ ] 强约束：故意 mock 无 source 响应时 retry/保底机制工作\n- [ ] 阶段复盘文档齐全\n  git tag m7-pass",
+        "testStrategy": "用户跑 1 遍 5 scene 所有交互点，无 source-less 消息。",
+        "dependencies": [
+          "37",
+          "38",
+          "39"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-04-29T08:36:52.617Z"
+      },
+      {
+        "id": "41",
+        "title": "M8 · 端到端流程 5 次演练 + 优化",
+        "description": "完整跑 onboard → ideate → retro → home 至少 5 次，定位卡顿/语感/节奏问题，调 prompt 与 UI。",
+        "details": "演练记录：每次跑完写 docs/demo-rehearsal-N.md，记录：\n  - 总时长（目标 5-8 分钟）\n  - 卡点（位置 + 原因）\n  - LLM 输出质量（具体 case）\n  - UI 不顺手的地方\n\n优化点：\n  - 调 prompt（PRESENT / REFINE / DRILL 三处最关键）\n  - 调 mock 数据（让伏笔更明显）\n  - 调动画时序（onboarding LIVE rail 节奏）\n\n参考：PRD §13.1 演示故事线",
+        "testStrategy": "5 次完整流程都在 8 分钟内完成；最后 2 次主观评分 \"无卡顿\"。",
+        "dependencies": [
+          "40"
+        ],
+        "status": "pending",
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": "42",
+        "title": "M8 · 保底脚本：每个 LLM 调用点的 hardcoded 兜底响应",
+        "description": "为所有实时 LLM 阶段（PRESENT / REFINE / EXPLORE / DRILL / VALIDATE / Orchestrator chat）准备一份 hardcoded fallback，应急时一键切换。",
+        "details": "实现：\n  backend/agents/_fallback/responses.json：按 (agent, state, scenario) 索引的 hardcoded 文本\n  backend/agents/_fallback/loader.py：模拟流式输出（按字符节流 30ms）\n\nfeature flag：USE_FALLBACK_ALL=false 默认；设 true 时所有 LLM 调用直接走 fallback。\n\n参考：PRD §7.3 §13.3 应急方案",
+        "testStrategy": "USE_FALLBACK_ALL=true 时端到端流程仍可走通；fallback 响应也带 source tag。",
+        "dependencies": [
+          "37"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-06-30T13:23:31.891841Z"
+      },
+      {
+        "id": "43",
+        "title": "M8 · 评委演示脚本撰写",
+        "description": "写 docs/demo-script.md，含主持人话术、评委交互引导、关键创新强调点。",
+        "details": "章节：\n  1. 演示故事线（5-8 分钟，参考 PRD §13.1）\n  2. 关键话术（参考 PRD §13.2 \"AI 先做功课\" / \"三态画像\" / \"双轴决策 + source tagging\" / \"闭环\"）\n  3. 评委交互引导（floating tooltip 文案 + \"评委模式\"按钮使用方式）\n  4. 应急切换（实时 LLM 失败时怎么办、网络中断时怎么办）\n  5. 常见追问与回答（多平台 / 商单匹配 / 隐私 / proactive AI）\n\n参考：PRD §13 + frontend_design/README.md §Open Questions",
+        "testStrategy": "找 1 位非项目成员按脚本独立走通流程，无歧义。",
+        "dependencies": [
+          "41",
+          "42"
+        ],
+        "status": "pending",
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": "44",
+        "title": "USER-TEST · M8 闭环演示与故事线打磨验收",
+        "description": "用户走通 5 次端到端 + 评委脚本能独立走通；产出 phase-8-demo.md。",
+        "details": "验收清单：\n- [ ] 端到端流程 8 分钟内可走完，至少 5 次无报错\n- [ ] 4 个关键创新点（先做功课 / 三态 / source tag / 闭环）在话术中显式提及\n- [ ] 评委模式按钮可用\n- [ ] hardcoded fallback 切换 < 5s 即生效\n- [ ] 阶段复盘文档齐全\n  git tag m8-pass",
+        "testStrategy": "找 2 个非项目成员各走 1 次完整 demo，全程不卡壳。",
+        "dependencies": [
+          "41",
+          "42",
+          "43"
+        ],
+        "status": "pending",
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": "49",
+        "title": "M9 · LLM 全链路 retry + 缓存兜底 + 超时",
+        "description": "所有 LLM 调用包 retry（429/5xx 指数退避 ≤ 2 次 + JSON parse 失败 retry 1 次）+ 超时（首 token 8s / 全部 30s）+ 失败回退到 cache。",
+        "details": "实现：\n  backend/llm/client.py：统一封装 chat completion + retry + 流式超时 + fallback\n  tenacity 装饰器配指数退避 wait_exponential(min=1, max=8)\n  超时用 httpx 的 timeout + read_timeout\n\n参考：PRD §7.3",
+        "testStrategy": "故意 mock 50% 失败率：retry 后成功率 > 95%；持续失败时回退到 cache，前端不报错。",
+        "dependencies": [
+          "37"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-06-30T13:23:31.891841Z"
+      },
+      {
+        "id": "50",
+        "title": "M9 · Chaos 测试关键路径",
+        "description": "对 onboarding turn / ideate submit / retro entry 三个关键路径做 chaos 测试（断网 / 高延迟 / 限流 / 部分失败）。",
+        "details": "工具：toxiproxy 或简单 mitmproxy + script\n\n场景：\n  - 30% 包 drop\n  - 50% 延迟 +5s\n  - 完全断网 30s\n  - LLM 限流 429\n\n指标：演示流程依然能跑完（可能慢但不崩）。",
+        "testStrategy": "每个场景下走完整 demo 至少 1 次，记录降级行为。",
+        "dependencies": [
+          "49"
+        ],
+        "status": "pending",
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": "51",
+        "title": "M9 · 应急切换脚本（实时 LLM ↔ 全缓存兜底）",
+        "description": "提供一键切换脚本，5 秒内把所有 agent 从实时 LLM 切到全缓存兜底（保留少数 PRESENT 模拟流式）。",
+        "details": "实现：\n  scripts/switch_to_fallback.sh：通过 API call 或环境变量更新让后端立即热切换\n  POST /api/admin/mode { \"use_fallback_all\": true }\n  受 ADMIN_TOKEN 保护\n\n参考：PRD §13.3 §12.11",
+        "testStrategy": "演示中触发切换 → 5s 内生效 → 端到端流程仍可走完。",
+        "dependencies": [
+          "42",
+          "49"
+        ],
+        "status": "done",
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-06-30T13:23:31.891841Z"
+      },
+      {
+        "id": "52",
+        "title": "USER-TEST · M9 风险演练与冷热备验收",
+        "description": "用户验收 M9：模拟 LLM 50% 失败时仍可演示；产出 phase-10-resilience.md。",
+        "details": "验收清单：\n- [ ] LLM 失败率 50% 时 demo 全流程仍可走完\n- [ ] 切换脚本 < 5s 生效\n- [ ] 切换后 fallback 响应仍带 source tag\n- [ ] 阶段复盘文档齐全\n  git tag m10-pass",
+        "testStrategy": "故意限流 + 演示切换，端到端无中断。",
+        "dependencies": [
+          "49",
+          "50",
+          "51"
+        ],
+        "status": "pending",
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": "53",
+        "title": "项目终态 · 17 章验收 Checklist 全绿",
+        "description": "对照 PRD §17 验收 Checklist 逐项核对：功能完整性 / 端到端 / 部署 / 评分映射 / 文档。",
+        "details": "PRD §17 共 5 大类 17 项：\n  - 功能完整性 6 项\n  - 端到端 4 项\n  - 部署 4 项\n  - 评分映射 2 项\n  - 文档 3 项（PRD + 三 spec + README + 演示脚本）\n\n输出：docs/acceptance-checklist.md，每项注 ✅ / ⚠️ / ❌ 与证据链。",
+        "testStrategy": "17 项全绿；任何 ⚠️ 项要附理由 + 影响评估。",
+        "dependencies": [
+          "52"
+        ],
+        "status": "pending",
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": "54",
+        "title": "项目终态 · 提交大赛资料（demo URL + PRD + spec + 演示视频）",
+        "description": "把所有交付物打包提交：demo 公网 URL、PRD、三份 agent spec、README、演示脚本、5 分钟演示视频（720p 兜底）。",
+        "details": "交付清单：\n  - demo URL（评委可访问）\n  - PRD.md（本仓库根 + .taskmaster/docs/）\n  - 三份 agent spec\n  - README.md\n  - docs/demo-script.md\n  - docs/demo-video-720p.mp4（备用）\n  - docs/phase-reports/phase-{0..10}-*.md（阶段复盘 11 份）\n  - docs/acceptance-checklist.md\n\n参考：PRD §17",
+        "testStrategy": "评委收到链接能直接访问；视频备份能播放。",
+        "dependencies": [
+          "53"
+        ],
+        "status": "pending",
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": "55",
+        "title": "M11 · Onboarding agent prompt 调优",
+        "description": "解决 EXPLORE/SUMMARIZE 重复输出 + source tag 命中率低的问题（USER-TEST M4 反馈）。",
+        "details": "改动范围：\n- backend/prompts/onboarding/{present,explore,summarize,validate}.txt\n- backend/agents/onboarding/handlers.py 的 _VALID_SOURCE_TAGS 与 _FALLBACK_SOURCE\n\n目标：\n1. SUMMARIZE 每次进入时 prompt 注入「不要重复上轮总结」约束 + 累计 turn 数变量\n2. EXPLORE prompt 强约束输出格式：正文 ≥ 2 段，末尾必须 [tag1, tag2]（合法 tag 集合）\n3. 扩展 _VALID_SOURCE_TAGS 到 5 类（与 strategy 对齐：画像/趋势/数据/历史复盘/用户偏好驱动）\n4. fallback_injected 时 backend log 加 LLM 原始输出片段方便复盘",
+        "testStrategy": "连续跑 5 次 onboarding 完整流程；统计 source_tag.fallback_injected 出现次数；\n对照前后两轮 SUMMARIZE 输出，至少有 1 段不同（变量数据 / 措辞不同）。",
+        "dependencies": [
+          "23",
+          "24"
+        ],
+        "status": "done",
+        "priority": "medium",
+        "subtasks": [],
+        "updatedAt": "2026-06-30T13:23:31.891841Z"
+      },
+      {
+        "id": "56",
+        "title": "M11 · Strategy agent prompt 调优",
+        "description": "提升 PRESENT/REFINE source tag 命中率；REFINE 三类（challenge/adjust/approve）分类稳定。",
+        "details": "改动范围：\n- backend/prompts/strategy/{present,refine,classify_feedback}.txt\n- backend/agents/strategy/handlers.py（如有）\n\n目标：\n1. PRESENT prompt 加 source tag 输出格式 few-shot 例子\n2. REFINE classify_feedback prompt 给清晰的三类定义 + 边界示例\n3. 失败时 backend log 留原文便于排查",
+        "testStrategy": "三类 user 反馈各跑 3 次（共 9 次），分类准确度 ≥ 8/9；\nPRESENT 输出 source_tag 命中率 ≥ 95%（统计 100 次调用）。",
+        "dependencies": [
+          "27",
+          "28"
+        ],
+        "status": "done",
+        "priority": "medium",
+        "subtasks": [],
+        "updatedAt": "2026-06-30T13:23:31.891841Z"
+      },
+      {
+        "id": "57",
+        "title": "M11 · Retro agent prompt 调优",
+        "description": "DRILL 回答沿 evidence 链；UPDATE_PROFILE delta 质量提升（避免空 delta）。",
+        "details": "改动范围：\n- backend/prompts/retro/{drill,update_profile,present}.txt\n- backend/agents/retro/handlers.py（如有）\n\n目标：\n1. DRILL prompt 强约束「必须引用 element_id 关联的 evidence」\n2. UPDATE_PROFILE prompt 给 delta 字段填充示例（add_evidence/promote/new_observations）\n3. PRESENT 输出可视化锚点字段（让前端 hover 高亮 KPI 卡）",
+        "testStrategy": "随机 5 个 InsightCard chip → DRILL，回答与 evidence 关联度人工判分 ≥ 4/5；\nUPDATE_PROFILE 调用 5 次，delta 至少有 1 项非空（新观察 / 新证据）。",
+        "dependencies": [
+          "32",
+          "33"
+        ],
+        "status": "done",
+        "priority": "medium",
+        "subtasks": [],
+        "updatedAt": "2026-06-30T13:23:31.891841Z"
+      },
+      {
+        "id": "58",
+        "title": "M11 · Agent 状态机阈值调整",
+        "description": "调 onboarding next_state_after_validate / fatigue 阈值；让 SUMMARIZE 不被过早触发。",
+        "details": "改动范围：\n- backend/agents/onboarding/state_machine.py（next_state_after_validate）\n- backend/agents/onboarding/memory.py（has_unexplored_high_priority / fatigue 判定）\n\n目标：\n1. next_state_after_validate 决策树加「最少 N 轮才能进 SUMMARIZE」约束（demo N=3）\n2. fatigue 强信号词典扩展（避免误判），降级阈值\n3. user_requested_finish 必须包含明确关键词（不要被『先这样吧，再说说 X』误触）",
+        "testStrategy": "构造 6 类 user 输入跑 dry-run，对比改动前后 next_state 决策；\nUSER-TEST 无『3 轮内进入 SUMMARIZE』情况。",
+        "dependencies": [
+          "23"
+        ],
+        "status": "pending",
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": "59",
+        "title": "M11 · UI 文案 / 字幕 / 兜底优化",
+        "description": "前端错误兜底文案 + source tag 中文翻译统一 + 视频字幕脚本输出质量（hook/pacing/cta）。",
+        "details": "改动范围：\n- frontend/src/views/_shared/SourceBadge.tsx（label 与 chat/SourceChips.tsx 对齐）\n- frontend/src/views/OnboardView.tsx 的 fallback 文案（重新提问 chip）\n- frontend/src/components/chat/ChatDock.tsx 的占位 / 错误文案\n- backend/prompts/strategy/present.txt 的字幕 / hook 输出 schema 约束\n\n目标：\n1. 整理所有兜底 / 占位 / 错误文案到一个 frontend/src/strings.ts 单文件\n2. SourceBadge / SourceChips 标签翻译一致（不要『画像驱动』vs『profile』并存）\n3. PacingTab 的 pacing 时间轴字段稳定（at + what 必须填）",
+        "testStrategy": "走完 demo 全流程，记录所有看到的 UI 文案；对齐口径；\nPacingTab 5 次提交都能完整渲染（不出现 ' - ' 空字段）。",
+        "dependencies": [
+          "13",
+          "23",
+          "27",
+          "32"
+        ],
+        "status": "done",
+        "priority": "medium",
+        "subtasks": [],
+        "updatedAt": "2026-06-30T13:23:31.891841Z"
+      },
+      {
+        "id": "60",
+        "title": "USER-TEST · M11 Prompt / Agent / 字幕调试验收",
+        "description": "连续 5 次完整闭环验证调优效果；产出 phase-11-prompt-tuning.md。",
+        "details": "验收清单：\n- [ ] Onboarding 5 轮无明显重复总结\n- [ ] source_tag.fallback_injected 占比 < 5%（统计 100 次）\n- [ ] REFINE 分类准确度 ≥ 8/9\n- [ ] DRILL 回答与 evidence 关联度人工判分 ≥ 4/5\n- [ ] PacingTab 5 次完整渲染无空字段\n- [ ] 阶段复盘文档齐全 + git tag m11-pass",
+        "testStrategy": "用户连续跑 5 次完整 demo（onboard → ideate → retro → profile_v2），统计指标。",
+        "dependencies": [
+          "55",
+          "56",
+          "57",
+          "58",
+          "59"
+        ],
+        "status": "pending",
+        "priority": "medium",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "version": "1.0.0",
+      "lastModified": "2026-06-30T13:23:31.891841Z",
+      "taskCount": 56,
+      "completedCount": 43,
+      "tags": [
+        "master"
+      ]
+    }
+  }
+}

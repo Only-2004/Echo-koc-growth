@@ -1,0 +1,39 @@
+{
+  "video_id": "vid_016",
+  "title": "考研期间我对自己的5个发现",
+  "published_at": "2026-04-17T20:00:00Z",
+  "strategy_id": "str_000",
+  "duration_sec": 71,
+  "transcript_summary": "开场字幕「考研第53天，我发现了一些事」；中段列举五个发现（睡眠质量比时长重要、焦虑来自对比而非落后、自律是惯性、图书馆的人让我安心、每天要奖励自己）；结尾引导评论「你考研期间有什么发现」",
+  "metrics": {
+    "plays": 22440,
+    "likes": 1891,
+    "comments": 188,
+    "shares": 49,
+    "completion_rate": 0.41,
+    "follow_rate": 0.022,
+    "new_followers": 494,
+    "new_followers_with_kaoyan_tag_ratio": 0.79
+  },
+  "drop_off_curve_points": [
+    {"t_sec": 0, "retention": 1.00},
+    {"t_sec": 4, "retention": 0.96},
+    {"t_sec": 10, "retention": 0.88},
+    {"t_sec": 18, "retention": 0.76},
+    {"t_sec": 28, "retention": 0.65},
+    {"t_sec": 38, "retention": 0.56},
+    {"t_sec": 50, "retention": 0.47},
+    {"t_sec": 62, "retention": 0.43},
+    {"t_sec": 71, "retention": 0.41}
+  ],
+  "comments": [
+    {"comment_id": "cmt_161", "text": "「焦虑来自对比而非落后」这句说到心里去了，截图了", "likes": 52, "cluster": "kaoyan_resonance"},
+    {"comment_id": "cmt_162", "text": "五个发现每一条我都有共鸣，这种视频太需要了", "likes": 44, "cluster": "kaoyan_resonance"},
+    {"comment_id": "cmt_163", "text": "博主考几月份的研？感觉我们备考时间差不多", "likes": 21, "cluster": "kaoyan_resonance"},
+    {"comment_id": "cmt_164", "text": "自律是惯性那一点可以展开说说吗？想知道具体怎么培养", "likes": 37, "cluster": "content_request"},
+    {"comment_id": "cmt_165", "text": "第3-4个发现过渡的时候有点跳，不太流畅", "likes": 13, "cluster": "pacing_issue"},
+    {"comment_id": "cmt_166", "text": "奖励自己这个好，但是怎么奖励合适？能出一条这个的视频吗", "likes": 26, "cluster": "content_request"},
+    {"comment_id": "cmt_167", "text": "关注了！等你出考研后复盘", "likes": 19, "cluster": "kaoyan_resonance"},
+    {"comment_id": "cmt_168", "text": "71秒说5件事感觉有点赶，每个发现都想听你多说几句", "likes": 28, "cluster": "pacing_issue"}
+  ]
+}

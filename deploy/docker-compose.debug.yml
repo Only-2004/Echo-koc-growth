@@ -1,0 +1,79 @@
+# Beacon · Debug docker-compose override（worktree 调试用）
+#
+# 与生产线上隔离的并行 stack，验证 docker volume 修复 + 全量异常日志。
+#
+# 用法（在 worktree 根执行）：
+#   docker compose -p beacon-debug \
+#     -f docker-compose.yml \
+#     -f deploy/docker-compose.debug.yml \
+#     up -d --build
+#
+#   公网入口：http://<server-ip>:8090/
+#
+# 与生产 deploy/docker-compose.prod.yml 的区别：
+#   - 容器名前缀 beacon-debug-* 避免与生产 beacon-* 冲突
+#   - nginx 端口 8090（仅 HTTP），不申请 SSL，不与生产 80/443 抢端口
+#   - backend 不暴露端口到公网（只在 docker network 内）
+#   - 用 prod 镜像（BUILD_ENV=prod、Dockerfile.prod），但走的是修复后的 volume 挂载
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        BUILD_ENV: prod
+    container_name: beacon-debug-backend
+    restart: unless-stopped
+    mem_limit: 1g
+    # .env 只在主仓库 /opt/beacon/.env（CLAUDE.md 红线）；worktree 不复制，用 !override 替换 base 的相对路径
+    env_file: !override
+      - /opt/beacon/.env
+    # 不暴露 8000 到公网；前端通过 nginx 容器走 docker DNS 调
+    ports: !reset []
+    expose:
+      - "8000"
+    volumes:
+      # 修复后的挂载：项目根 → 容器内 /app/{runtime_data,cache}
+      - ./runtime_data:/app/runtime_data
+      - ./cache:/app/cache
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: beacon-debug-frontend
+    restart: unless-stopped
+    mem_limit: 256m
+    ports: !reset []
+    expose:
+      - "80"
+    # 内置 nginx serve dist；外层 nginx 通过 proxy_pass 转发
+    volumes: !reset []
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  nginx:
+    image: nginx:alpine
+    container_name: beacon-debug-nginx
+    restart: unless-stopped
+    ports:
+      - "8090:80"
+    volumes:
+      - ./deploy/nginx.debug.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"

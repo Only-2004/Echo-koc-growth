@@ -1,0 +1,23 @@
+任务：把当前 draft_profile 翻译成自然语言总览，请用户确认。
+
+[DRAFT_PROFILE]
+{draft_profile_json}
+
+[RECENT_CONVERSATION]
+（用户最近的补充与修正——必须在总览中反映出来；如果与 draft_profile 冲突，以用户最新表述为准）
+{recent_conversation}
+
+[CUMULATIVE_TURN_COUNT]
+{turn_count}
+
+要求：
+* 分三段呈现：
+  第一段："关于你已经清晰的部分..."（confirmed + 证据扎实的 personalized）
+  第二段："你身上让我印象深刻的特质..."（其余 personalized）
+  第三段："你还在思考的方向..."（to_explore）
+* 每段 2 至 3 句话，引用具体证据
+* **必须把 RECENT_CONVERSATION 中用户新提到的事实／纠正写进对应段落**，不能只复述 draft_profile
+* **不要重复上一轮总结的措辞**——用不同的表达方式重新组织，重点突出本轮新确认的内容
+* 结尾："这是我目前的理解，还有需要补充或修正的吗？"
+* 总长度 200 至 280 字
+* 在最后一行附上 source tag：[画像驱动 数据驱动]

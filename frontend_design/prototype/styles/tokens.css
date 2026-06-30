@@ -1,0 +1,177 @@
+/* KOC Agent — Design Tokens
+ * Aesthetic: dark canvas, warm-white type, lime accent
+ * Tone: 温和陪伴型 — 留白、圆润、可读
+ */
+
+:root {
+  /* Surface ladder — warm-toned light */
+  --bg-0:        #faf9f6;        /* page (warm off-white) */
+  --bg-1:        #ffffff;        /* card */
+  --bg-2:        #f3f1ec;        /* nested card */
+  --bg-3:        #e8e5dd;        /* hover / chip */
+  --bg-inset:    #f7f5f0;        /* inset wells (chat input) */
+
+  /* Foreground — warm dark */
+  --fg-0:        #1a1814;        /* primary text */
+  --fg-1:        #46433c;        /* secondary */
+  --fg-2:        #807c72;        /* tertiary / labels */
+  --fg-3:        #b3afa5;        /* hint / placeholder */
+  --fg-4:        #d9d5cb;        /* divider */
+
+  /* Borders */
+  --line-0:      rgba(26,24,20,0.06);
+  --line-1:      rgba(26,24,20,0.10);
+  --line-2:      rgba(26,24,20,0.18);
+
+  /* Accent — deep lime/olive (works on light) */
+  --accent:      #5d7a1a;
+  --accent-ink:  #ffffff;        /* text on accent */
+  --accent-soft: rgba(93,122,26,0.10);
+  --accent-line: rgba(93,122,26,0.32);
+
+  /* Semantic — darker, light-bg friendly */
+  --pos:         #3d8a3a;
+  --pos-soft:    rgba(61,138,58,0.10);
+  --neg:         #c44a3a;
+  --neg-soft:    rgba(196,74,58,0.10);
+  --warn:        #b87a1a;
+  --warn-soft:   rgba(184,122,26,0.12);
+  --info:        #2d6cb4;
+  --info-soft:   rgba(45,108,180,0.10);
+
+  /* Pillar tints — for the three画像 states */
+  --pillar-confirm: #3d8a3a;     /* 确定项 */
+  --pillar-person:  #b87a1a;     /* 个性化项 */
+  --pillar-explore: #7a4ec4;     /* 待探索项 */
+
+  /* Type */
+  --font-sans:   "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono:   "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+  --font-serif:  "Source Serif 4", "Songti SC", "Noto Serif SC", Georgia, serif;
+
+  /* Radii */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+  --r-2xl: 28px;
+  --r-pill: 999px;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.35);
+  --shadow-lg: 0 24px 60px rgba(0,0,0,0.5);
+
+  /* Spacing scale (multiples of 4) */
+  --s-1: 4px;  --s-2: 8px; --s-3: 12px; --s-4: 16px;
+  --s-5: 20px; --s-6: 24px; --s-7: 32px; --s-8: 40px;
+  --s-9: 56px; --s-10: 72px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg-0);
+  color: var(--fg-0);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Density modes */
+:root[data-density="compact"] { --s-pad-card: 16px; --s-row: 10px; }
+:root[data-density="cozy"]    { --s-pad-card: 24px; --s-row: 14px; }
+:root[data-density="roomy"]   { --s-pad-card: 32px; --s-row: 20px; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(26,24,20,0.12); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(26,24,20,0.20); }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Utility primitives used across the app */
+.h-mono { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-2); }
+.divider { height: 1px; background: var(--line-0); width: 100%; }
+
+.kbd {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--line-2);
+  color: var(--fg-1);
+  background: var(--bg-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--bg-2);
+  border: 1px solid var(--line-1);
+  color: var(--fg-1);
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--fg-2); }
+.chip[data-tone="confirm"] { color: var(--pillar-confirm); border-color: rgba(61,138,58,0.3); background: rgba(61,138,58,0.07); }
+.chip[data-tone="confirm"] .dot { background: var(--pillar-confirm); }
+.chip[data-tone="person"]  { color: var(--pillar-person);  border-color: rgba(184,122,26,0.32); background: rgba(184,122,26,0.07); }
+.chip[data-tone="person"] .dot  { background: var(--pillar-person); }
+.chip[data-tone="explore"] { color: var(--pillar-explore); border-color: rgba(122,78,196,0.34); background: rgba(122,78,196,0.07); }
+.chip[data-tone="explore"] .dot { background: var(--pillar-explore); }
+.chip[data-tone="accent"]  { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
+
+button { font-family: inherit; cursor: pointer; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-1);
+  background: var(--bg-2);
+  color: var(--fg-0);
+  font-size: 13px;
+  font-weight: 500;
+  transition: background .15s, border-color .15s, transform .15s;
+}
+.btn:hover { background: var(--bg-3); border-color: var(--line-2); }
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: transparent;
+  font-weight: 600;
+}
+.btn-primary:hover { background: #6e8e22; }
+.btn-ghost { background: transparent; }
+
+/* Card */
+.card {
+  background: var(--bg-1);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-lg);
+}
+
+/* Subtle striped placeholder — for video thumbs / images we don't have */
+.placeholder {
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(26,24,20,0.03) 0 8px,
+      rgba(26,24,20,0.06) 8px 16px);
+  border: 1px dashed var(--line-2);
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--fg-3);
+  text-transform: uppercase;
+}
+
+/* Sparkline / inline svg colors inherit currentColor */
+svg { display: block; }

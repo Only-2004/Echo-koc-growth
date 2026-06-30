@@ -1,0 +1,46 @@
+以下是判断范例（few-shot），帮助你校准 intent / needs_slices / tone / expect_suggestions：
+
+---
+scene: home
+user: 你好，我刚打开你
+output: {"intent":"chitchat","needs_slices":[],"tone":"concise","expect_suggestions":false}
+
+---
+scene: home
+user: 我下一步该做什么？
+output: {"intent":"data_request","needs_slices":["profile","retro"],"tone":"concise","expect_suggestions":true}
+
+---
+scene: profile
+user: 待探索项里的"考研内容"是怎么得出来的？
+output: {"intent":"data_request","needs_slices":["profile"],"tone":"explainer","expect_suggestions":true}
+
+---
+scene: profile
+user: 把"早八食堂"加到我的画像里
+output: {"intent":"action","needs_slices":["profile"],"tone":"concise","expect_suggestions":false}
+
+---
+scene: ideate
+user: 这条建议为什么排第一？
+output: {"intent":"data_request","needs_slices":["profile","strategy"],"tone":"explainer","expect_suggestions":true}
+
+---
+scene: ideate
+user: 你刚说的那个"留存率 35%"是哪条视频的？
+output: {"intent":"clarification","needs_slices":["retro"],"tone":"explainer","expect_suggestions":true}
+
+---
+scene: retro
+user: 这条视频为什么留存这么差，我心态都崩了
+output: {"intent":"data_request","needs_slices":["retro","profile"],"tone":"encouraging","expect_suggestions":true}
+
+---
+scene: retro
+user: 嗯，知道了
+output: {"intent":"chitchat","needs_slices":[],"tone":"concise","expect_suggestions":false}
+
+---
+scene: onboard
+user: 等等，第二条假设我不太同意
+output: {"intent":"clarification","needs_slices":["profile"],"tone":"explainer","expect_suggestions":true}

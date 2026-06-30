@@ -1,0 +1,49 @@
+任务：阅读以下 KOC 账号数据，输出候选画像 claims。
+
+[ACCOUNT_SNAPSHOT]
+{account_snapshot_json}
+
+[HISTORICAL_VIDEOS]
+{historical_videos_json}
+
+[TOP_COMMENTS]
+{top_comments_json}
+
+[AUDIENCE_SNAPSHOT]
+{audience_snapshot_json}
+
+[BASELINE_METRICS]
+{baseline_metrics_json}
+
+请严格按以下 JSON 格式输出：
+
+{{
+  "candidate_claims": [
+    {{
+      "claim_id": "c001",
+      "claim_text": "约六成视频聚焦食堂或学校周边餐饮场景",
+      "category": "content_pillar",
+      "proposed_state": "confirmed",
+      "evidence": [
+        {{"source_type": "video", "source_id": "vid_001", "snippet": "..."}},
+        {{"source_type": "video", "source_id": "vid_004", "snippet": "..."}}
+      ]
+    }}
+  ],
+  "draft_profile_seed": {{
+    "confirmed": {{}},
+    "personalized": {{}},
+    "to_explore": {{}}
+  }}
+}}
+
+category 取值：content_pillar / persona_trait / life_context / aspiration / open_question
+proposed_state 取值：confirmed / personalized / to_explore
+
+判定规则：
+* confirmed：至少 5 条独立证据，且无明显反例
+* personalized：至少 3 条一致证据，但尚未经数据验证
+* to_explore：用户态度暧昧、证据矛盾、属于未来意向
+* 至少识别 1 条 open_question 类 claim
+
+仅输出 JSON 对象，不要任何其他解释文字。

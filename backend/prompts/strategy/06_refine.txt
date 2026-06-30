@@ -1,0 +1,20 @@
+任务：根据用户对策略的反馈生成回复，并在末尾给出 SOURCES。
+
+[CURRENT_STRATEGY_DRAFT]
+{{strategy_draft_json}}
+
+[USER_FEEDBACK_TYPE]
+{{feedback_type}}      # challenge | adjust | approve
+
+[USER_TEXT]
+{{user_text}}
+
+回复要求：
+* feedback_type=challenge 时，给出基于 profile / trends 的解释，说明这条建议为什么是这样
+* feedback_type=adjust 时，给出更新后的 hook / pacing / cta（具体到字段），并说明取舍
+* feedback_type=approve 时，确认收到、说明已落库、提示后续 retro 阶段会盯哪个 key_indicator
+* 全程中文、专业、不油腻
+* 长度 150 至 250 字
+* 文末一行：SOURCES: [...]（同 PRESENT 阶段约束）
+
+[MARKER:refine_reply]

@@ -1,0 +1,40 @@
+{
+  "title": "下午好，小A",
+  "mid": "近期数据解读：",
+  "headline_accents": [
+    "最近的新粉中，83% 是考研群体",
+    "评论高频词「考研规划 / 学习节奏」类占新增评论 62%"
+  ],
+  "actions": [
+    {
+      "tone": "accent",
+      "icon": "Chart",
+      "title": "复盘最近视频",
+      "body": "分析了完播率断点？",
+      "cta": "去复盘",
+      "scene": "retro"
+    },
+    {
+      "tone": "info",
+      "icon": "Lightbulb",
+      "title": "探索新选题",
+      "body": "讨论一个偏向考研的新视频选题？",
+      "cta": "看选题",
+      "scene": "ideate"
+    },
+    {
+      "tone": "explore",
+      "icon": "User",
+      "title": "更新你的画像",
+      "body": "把「考研定位」从待探索项升级到候选确定项？",
+      "cta": "去对话",
+      "scene": "profile"
+    }
+  ],
+  "metrics_30d": [
+    { "label": "粉丝增长", "value": "+547", "spark": [4, 8, 6, 12, 18, 22, 35, 92], "tone": "accent" },
+    { "label": "总播放", "value": "92.5K", "spark": [3, 5, 8, 12, 9, 14, 18, 24], "tone": "info" },
+    { "label": "平均完播率", "value": "39%", "spark": [0.32, 0.35, 0.41, 0.39, 0.36, 0.41, 0.38, 0.39], "tone": "person" },
+    { "label": "已发视频", "value": "5", "spark": [1, 1, 0, 1, 1, 0, 1, 1], "tone": "fg" }
+  ]
+}

@@ -1,0 +1,9 @@
+你是 Beacon 的 Retro & Insight Agent，处于 LOAD 阶段。
+
+LOAD 阶段不调用 LLM，只装载本次复盘的全部输入：
+- profile_v_in.json（onboarding 的最新画像）
+- strategy_snapshot.json（发布前策略快照）
+- new_video_for_retro.json（视频实际指标 + drop_off + 评论）
+- account_baseline.json（按 pillar 的历史基线）
+
+本 prompt 仅作占位说明。state_machine 进入 LOAD 时直接读 storage，不向 LLM 发送请求。

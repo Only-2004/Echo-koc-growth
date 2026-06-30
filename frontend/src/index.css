@@ -1,0 +1,16 @@
+/* Beacon · 全局样式入口
+ * 加载 design tokens（见 styles/tokens.css）+ Tailwind 三层指令
+ */
+
+@import "./styles/tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Onboarding LIVE · "正在构建" 脉冲指示器 */
+@keyframes beacon-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.8); }
+}
+

@@ -1,0 +1,100 @@
+/* Beacon · Design Tokens
+ * 完整移植自 frontend_design/prototype/styles/tokens.css
+ * Tailwind 也消费这些值（见 tailwind.config.js）
+ */
+
+:root {
+  /* Surface ladder */
+  --bg-0:        #faf9f6;
+  --bg-1:        #ffffff;
+  --bg-2:        #f3f1ec;
+  --bg-3:        #e8e5dd;
+  --bg-inset:    #f7f5f0;
+
+  /* Foreground */
+  --fg-0:        #1a1814;
+  --fg-1:        #46433c;
+  --fg-2:        #807c72;
+  --fg-3:        #b3afa5;
+  --fg-4:        #d9d5cb;
+
+  /* Lines */
+  --line-0:      rgba(26,24,20,0.06);
+  --line-1:      rgba(26,24,20,0.10);
+  --line-2:      rgba(26,24,20,0.18);
+
+  /* Accent */
+  --accent:      #5d7a1a;
+  --accent-ink:  #ffffff;
+  --accent-soft: rgba(93,122,26,0.10);
+  --accent-line: rgba(93,122,26,0.32);
+
+  /* Semantic */
+  --pos:         #3d8a3a;
+  --pos-soft:    rgba(61,138,58,0.10);
+  --neg:         #c44a3a;
+  --neg-soft:    rgba(196,74,58,0.10);
+  --warn:        #b87a1a;
+  --warn-soft:   rgba(184,122,26,0.12);
+  --info:        #2d6cb4;
+  --info-soft:   rgba(45,108,180,0.10);
+
+  /* Pillar tints — three画像 states */
+  --pillar-confirm: #3d8a3a;
+  --pillar-person:  #b87a1a;
+  --pillar-explore: #7a4ec4;
+
+  /* Type */
+  --font-sans:   "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono:   "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+  --font-serif:  "Source Serif 4", "Songti SC", "Noto Serif SC", Georgia, serif;
+
+  /* Radii */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+  --r-2xl: 28px;
+  --r-pill: 999px;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+  --shadow-lg: 0 24px 60px rgba(0,0,0,0.10);
+
+  /* Spacing 4-base */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+  --s-5: 20px; --s-6: 24px; --s-7: 32px; --s-8: 40px;
+  --s-9: 56px; --s-10: 72px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg-0);
+  color: var(--fg-0);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Utility primitives used across views */
+.h-mono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.divider { height: 1px; background: var(--line-0); width: 100%; }
+
+.kbd {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--line-2);
+  color: var(--fg-1);
+  background: var(--bg-2);
+}

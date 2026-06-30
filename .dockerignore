@@ -1,0 +1,20 @@
+# 通用 docker ignore
+.git
+.gitignore
+.venv
+.taskmaster
+.claude
+docs/phase-reports
+node_modules
+__pycache__
+*.pyc
+.pytest_cache
+.mypy_cache
+.ruff_cache
+dist
+build
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store

@@ -1,0 +1,48 @@
+你是 Beacon 的 Retro & Insight Agent，处于 COMPARE 阶段。
+
+任务：基于 strategy_snapshot 与 new_video metrics，构造「策略意图 vs 实际表现」的多维对比表。
+
+[STRATEGY_SNAPSHOT]
+{{strategy_snapshot_json}}
+
+[ACTUAL_METRICS]
+{{video_metrics_json}}
+
+[BASELINE]
+{{account_baseline_json}}
+
+请严格输出 JSON（不要附带任何解释文字）：
+
+{
+  "data_cards": [
+    {
+      "card_id": "dc_completion | dc_follow | ...",
+      "metric": "completion_rate | follow_rate | ...",
+      "value": 数值,
+      "baseline_overall": 数值 | null,
+      "baseline_pillar": 数值 | null,
+      "verdict": "hit | miss | exceed | within_noise",
+      "is_key_indicator": true | false
+    }
+  ],
+  "strategy_review": [
+    {
+      "predicted": "...",
+      "actual":    "...",
+      "verdict":   "hit | miss | partial",
+      "evidence":  [{"type": "drop_off | comment | metric", "ref": "..."}]
+    }
+  ]
+}
+
+判定规则：
+- verdict 基于实际值与 baseline_pillar（或 baseline_overall 兜底）的比较：
+  - within_noise：相对 baseline 偏差 ≤ ±5% 视为噪声
+  - hit：相对 baseline 偏差在 (-5%, +15%] 之间，视为达成基线水准
+  - exceed：相对 baseline 偏差 > +15%
+  - miss：相对 baseline 偏差 < -5%
+- 不要输出任何"预测区间"或"预测值 vs 实际值"的数字差；判断只跟 baseline 比
+- 不要在 evidence / actual 文本里编造任何具体数字预测；只引用 strategy snapshot 已有的定性描述（如 hook 设计、pacing、cta）和实际数值
+- execution.key_focus 对应的 card 必须 is_key_indicator=true
+- strategy_review 至少覆盖 strategy 中的 hook、pacing、cta 三类（每类一行；predicted 写策略当时的定性意图，actual 写实际呈现 / 反馈）
+- 中文输出

@@ -1,0 +1,31 @@
+任务：基于用户画像和当前趋势，生成 2 至 3 个候选 idea（discovery 模式专用）。
+
+[USER_PROFILE]
+{{profile_json}}
+
+[CURRENT_TRENDS]
+{{trends_json}}
+
+请严格输出 JSON：
+
+{
+  "candidate_ideas": [
+    {
+      "idea_id": "i001",
+      "topic": "...",
+      "primary_pillar": "...",
+      "rationale": "贴合 X 主轴 + 踩到 Y 趋势 + 验证 Z 假设",
+      "trend_link": "...",
+      "to_explore_link": "...",
+      "differentiation_seed": "..."
+    }
+  ]
+}
+
+要求：
+* 每个 idea 必须显式连接到 profile 中至少一个 confirmed pillar 或 to_explore 项
+* 至少一个 idea 服务于 to_explore 验证（不只是踩热点）
+* 候选 idea 之间应有差异度（不要全部聚焦同一主轴）
+* rationale 用一句话讲清"为什么是这个"
+
+[MARKER:generate_ideas]

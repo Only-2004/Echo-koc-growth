@@ -1,0 +1,103 @@
+{
+  "identity": {
+    "handle": "@小A的校园日常",
+    "platform": "抖音",
+    "follower_count": 1238,
+    "summary_line": "正在考研的食堂博主",
+    "summary_body": "在读大三 · 校园生活与学业压力的真实记录者。「食堂探店」是稳定的内容主轴，「考研日常」是个性化的滤镜，账号目前仍在思考是否把考研定位为长期主轴。",
+    "stage_chips": [
+      { "tone": "confirm", "label": "抖音 · 1.2K 粉" },
+      { "tone": "confirm", "label": "食堂探店" },
+      { "tone": "person", "label": "26 考研中" },
+      { "tone": "person", "label": "在读大三" },
+      { "tone": "explore", "label": "考研定位待决" }
+    ],
+    "last_updated": "2 天前 · 基于 8 条视频 + 1 次对话"
+  },
+  "pillars": {
+    "confirm": [
+      { "tag": "平台", "value": "抖音" },
+      { "tag": "粉丝量级", "value": "1.2K" },
+      { "tag": "稳定方向", "value": "食堂探店" },
+      { "tag": "镜头语言", "value": "手持 / 第一视角" },
+      { "tag": "更新频率", "value": "周更 1.5 条" },
+      { "tag": "封面风格", "value": "实拍照 + 大字标题" }
+    ],
+    "person": [
+      {
+        "label": "活力 + 真实感",
+        "weight": 0.86,
+        "evidence": "8 条视频里高频出现感叹语 / 笑声轨"
+      },
+      {
+        "label": "考研中（计算机）",
+        "weight": 0.95,
+        "evidence": "Onboarding 提到正在准备 26 考研，4 条视频自然带过"
+      },
+      {
+        "label": "在读大三",
+        "weight": 0.92,
+        "evidence": "自我介绍明确，账号 bio 与多条字幕一致"
+      },
+      {
+        "label": "外向 · 爱表达",
+        "weight": 0.78,
+        "evidence": "口播平均 47% 时长，画面正脸出镜率 64%"
+      }
+    ],
+    "explore": [
+      {
+        "q": "考研内容是否作为长期主轴？",
+        "status": "尚未决定",
+        "hint": "vid_004 / vid_010 / vid_016 / vid_019 平均完播 43%，明显高于其他；但担心考完后受众断层"
+      },
+      {
+        "q": "目标受众是「校园女大学生」还是「考研意向群体」？",
+        "status": "假设中",
+        "hint": "默认在校女大学生 + 考研意向，待数据持续校准"
+      },
+      {
+        "q": "下一个 6 个月想接哪类商单？",
+        "status": "未填",
+        "hint": "用户 self-intent：校园 / 考研 / 就业相关小型商单"
+      }
+    ]
+  },
+  "audience": {
+    "total": 1238,
+    "gender_male": 0.27,
+    "gender_female": 0.71,
+    "age_distribution": [
+      { "age": "<18", "v": 0.04 },
+      { "age": "18-22", "v": 0.62 },
+      { "age": "23-26", "v": 0.24 },
+      { "age": "27-30", "v": 0.07 },
+      { "age": "30+", "v": 0.03 }
+    ],
+    "regions": [
+      { "name": "华东", "weight": 0.46 },
+      { "name": "华北", "weight": 0.21 },
+      { "name": "华南", "weight": 0.16 },
+      { "name": "其他", "weight": 0.17 }
+    ],
+    "keywords": [
+      { "k": "考研", "w": 1.0 },
+      { "k": "校园", "w": 0.9 },
+      { "k": "食堂", "w": 0.85 },
+      { "k": "图书馆", "w": 0.7 },
+      { "k": "vlog", "w": 0.6 },
+      { "k": "学习", "w": 0.55 },
+      { "k": "大三", "w": 0.4 },
+      { "k": "探店", "w": 0.4 }
+    ]
+  },
+  "history_strip": [
+    { "date": "v0", "label": "v0 · 初版", "ticks": 7 },
+    { "date": "v1", "label": "v1 · onboarding", "ticks": 12 },
+    { "date": "v2", "label": "v2 · vid_010 后", "ticks": 14 },
+    { "date": "v3", "label": "v3 · 半月前", "ticks": 16 },
+    { "date": "v4", "label": "v4 · vid_018 后", "ticks": 17 },
+    { "date": "v5", "label": "v5 · vid_019 后", "ticks": 19 },
+    { "date": "v6", "label": "v6 · 当前", "ticks": 21 }
+  ]
+}

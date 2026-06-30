@@ -1,0 +1,92 @@
+{
+  "videos": [
+    {
+      "video_id": "vid_001",
+      "published_at": "2026-02-08T18:00:00Z",
+      "title": "二食堂 9 块 9 套餐到底吃啥",
+      "transcript_summary": "今天用 9 块 9 单点二食堂，主打实惠饭量，结尾说一个学期 50 顿减少多少负担",
+      "topic_tags": ["食堂探店", "校园生活"],
+      "duration_sec": 45,
+      "metrics": {"plays": 18420, "likes": 1042, "comments": 89, "shares": 24, "completion_rate": 0.36, "follow_rate": 0.011},
+      "drop_off_curve": [1.0, 0.92, 0.81, 0.62, 0.45, 0.36],
+      "primary_pillar": "食堂探店"
+    },
+    {
+      "video_id": "vid_004",
+      "published_at": "2026-02-22T19:15:00Z",
+      "title": "考研第 30 天，今天我崩溃了",
+      "transcript_summary": "图书馆早起 + 食堂吃了三天同款 + 一杯过期咖啡 + 真实情绪流露",
+      "topic_tags": ["考研日常", "校园生活"],
+      "duration_sec": 58,
+      "metrics": {"plays": 26130, "likes": 1865, "comments": 211, "shares": 67, "completion_rate": 0.48, "follow_rate": 0.024},
+      "drop_off_curve": [1.0, 0.94, 0.88, 0.79, 0.66, 0.48],
+      "primary_pillar": "考研日常"
+    },
+    {
+      "video_id": "vid_007",
+      "published_at": "2026-03-05T20:00:00Z",
+      "title": "我们学校的咖啡 ranking",
+      "transcript_summary": "三家学校咖啡店，人均 12-25，主观打分",
+      "topic_tags": ["校园生活", "食堂探店"],
+      "duration_sec": 38,
+      "metrics": {"plays": 12880, "likes": 612, "comments": 41, "shares": 8, "completion_rate": 0.31, "follow_rate": 0.007},
+      "drop_off_curve": [1.0, 0.85, 0.71, 0.55, 0.42, 0.31],
+      "primary_pillar": "食堂探店"
+    },
+    {
+      "video_id": "vid_010",
+      "published_at": "2026-03-19T18:30:00Z",
+      "title": "考研中的一天 - 早 7 点到晚 11 点",
+      "transcript_summary": "vlog 形式记录学习节奏，夹了一段在食堂打饭的 b-roll",
+      "topic_tags": ["考研日常", "学习日常"],
+      "duration_sec": 72,
+      "metrics": {"plays": 31280, "likes": 2240, "comments": 264, "shares": 92, "completion_rate": 0.42, "follow_rate": 0.027},
+      "drop_off_curve": [1.0, 0.91, 0.84, 0.74, 0.61, 0.42],
+      "primary_pillar": "考研日常"
+    },
+    {
+      "video_id": "vid_013",
+      "published_at": "2026-04-02T19:45:00Z",
+      "title": "周末逛学校周边 + 食堂 vs 外面",
+      "transcript_summary": "比价同样是炒河粉，食堂 11 元 vs 街边 18 元",
+      "topic_tags": ["食堂探店", "校园生活"],
+      "duration_sec": 52,
+      "metrics": {"plays": 14620, "likes": 752, "comments": 58, "shares": 16, "completion_rate": 0.34, "follow_rate": 0.009},
+      "drop_off_curve": [1.0, 0.88, 0.74, 0.59, 0.46, 0.34],
+      "primary_pillar": "食堂探店"
+    },
+    {
+      "video_id": "vid_016",
+      "published_at": "2026-04-15T20:30:00Z",
+      "title": "考研期间我对自己的 5 个发现",
+      "transcript_summary": "纯口播 + 字幕，复盘最近一个月学习中观察到的自己的反差",
+      "topic_tags": ["考研日常", "学习日常"],
+      "duration_sec": 64,
+      "metrics": {"plays": 22440, "likes": 1530, "comments": 188, "shares": 49, "completion_rate": 0.41, "follow_rate": 0.022},
+      "drop_off_curve": [1.0, 0.93, 0.87, 0.78, 0.62, 0.41],
+      "primary_pillar": "考研日常"
+    },
+    {
+      "video_id": "vid_018",
+      "published_at": "2026-04-21T18:00:00Z",
+      "title": "今天三餐我都吃了啥（普通版）",
+      "transcript_summary": "无主线，普通的一天三餐 vlog",
+      "topic_tags": ["校园生活", "食堂探店"],
+      "duration_sec": 48,
+      "metrics": {"plays": 8920, "likes": 312, "comments": 22, "shares": 4, "completion_rate": 0.29, "follow_rate": 0.005},
+      "drop_off_curve": [1.0, 0.83, 0.66, 0.51, 0.39, 0.29],
+      "primary_pillar": "校园生活"
+    },
+    {
+      "video_id": "vid_019",
+      "published_at": "2026-04-25T19:30:00Z",
+      "title": "图书馆 9 小时党 - 我的小习惯",
+      "transcript_summary": "记录在图书馆从早到晚的小习惯：固定座位、热水瓶、便利贴",
+      "topic_tags": ["考研日常", "学习日常"],
+      "duration_sec": 55,
+      "metrics": {"plays": 19650, "likes": 1284, "comments": 142, "shares": 38, "completion_rate": 0.39, "follow_rate": 0.020},
+      "drop_off_curve": [1.0, 0.92, 0.85, 0.74, 0.58, 0.39],
+      "primary_pillar": "考研日常"
+    }
+  ]
+}
