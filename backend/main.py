@@ -1,4 +1,4 @@
-"""Beacon 后端入口（FastAPI app）。
+"""Echo 后端入口（FastAPI app）。
 
 按里程碑挂载路由：
 - M0 /api/health
@@ -106,9 +106,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         yield
 
     app = FastAPI(
-        title="Beacon · KOC 成长伙伴 · API",
+        title="Echo koc成长 · API",
         version="0.1.0",
-        description="DeepSeek v4 驱动的 KOC 成长伙伴后端。详见 PRD §4 §9。",
+        description="DeepSeek v4 驱动的 koc成长后端。详见 PRD §4 §9。",
         lifespan=lifespan,
     )
 

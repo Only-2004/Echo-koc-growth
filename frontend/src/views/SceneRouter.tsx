@@ -1,5 +1,5 @@
 /**
- * Beacon · Scene 路由（M3 完整实现）
+ * Echo · Scene 路由（M3 完整实现）
  *
  * 根据 store.scene + profileReady 显示不同视图：
  *   profileReady=false:

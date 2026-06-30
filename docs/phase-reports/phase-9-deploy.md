@@ -37,7 +37,7 @@
 |---|---|---|
 | 1 | `curl https://43-134-72-220.nip.io/nginx-health` | 返回 `ok` |
 | 2 | `curl -v https://43-134-72-220.nip.io/api/health` | HTTP/2 200，JSON body 56 bytes |
-| 3 | 浏览器开 `https://43-134-72-220.nip.io` | 地址栏锁标 + Beacon 主页 |
+| 3 | 浏览器开 `https://43-134-72-220.nip.io` | 地址栏锁标 + Echo 主页 |
 | 4 | `docker compose ... ps` | 三个容器全部 `Up (healthy)` |
 | 5 | `docker stats --no-stream` | backend ~65MB/1GB，nginx ~5MB，frontend ~3MB |
 | 6 | `bash /opt/beacon/deploy/backup_runtime_data.sh` | `/opt/backups/beacon/` 下生成 tar.gz |

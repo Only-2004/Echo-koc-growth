@@ -1,5 +1,5 @@
 /**
- * Beacon · App Shell
+ * Echo · App Shell
  *
  * 3 列 grid：220 / 1fr / 420，chat dock 折叠时第三列收到 0px。
  * 顶部 sticky bar，左侧 nav rail，主内容区由 children 占。

@@ -89,7 +89,7 @@ async def test_chat_stream_chitchat_no_suggestions(tmp_path: Path) -> None:
     """chitchat 路径，expect_suggestions=False，输出无 SUGGESTIONS 行也 OK。"""
     client = MockLLMClient()
     _enq(client, _route_payload(intent="chitchat", needs_slices=[], expect_suggestions=False))
-    _enq(client, "你好，欢迎来到 Beacon。\n[数据驱动]")
+    _enq(client, "你好，欢迎来到 Echo。\n[数据驱动]")
 
     svc = OrchestratorService(client=client, runtime_dir=tmp_path)
     events = await _drain(svc, user_text="你好")

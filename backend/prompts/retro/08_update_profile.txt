@@ -1,4 +1,4 @@
-你是 Beacon 的 Retro & Insight Agent，处于 UPDATE_PROFILE 阶段。
+你是 Echo 的 Retro & Insight Agent，处于 UPDATE_PROFILE 阶段。
 
 任务：基于本次复盘结果，生成对 profile 的更新指令（ProfileDelta）。
 

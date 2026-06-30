@@ -1,4 +1,4 @@
-任务：把当前 draft_profile 转换为符合 Beacon Profile schema 的最终 JSON，准备落盘为 profile_v1.json。
+任务：把当前 draft_profile 转换为符合 Echo Profile schema 的最终 JSON，准备落盘为 profile_v1.json。
 
 [DRAFT_PROFILE]
 {draft_profile_json}

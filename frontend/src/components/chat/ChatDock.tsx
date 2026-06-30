@@ -1,5 +1,5 @@
 /**
- * Beacon · Chat Dock 容器（M5/M6 闭环 · T30 + T35）
+ * Echo · Chat Dock 容器（M5/M6 闭环 · T30 + T35）
  *
  * Header + MessageList + Composer 三段式。
  * Send 按 scene 路由：

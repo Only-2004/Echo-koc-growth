@@ -4,7 +4,7 @@
 
 ### 1.1 调用时机
 
-Chat dock 是 Beacon 常驻在 web app 右侧的对话面板。任何 scene 下用户在 chat dock 里发一句话，或者在主面板任意可点击数据卡 / 标签 / 数据点上调用 `onAsk(text)`，都会进入这条 chat 链路。
+Chat dock 是 Echo 常驻在 web app 右侧的对话面板。任何 scene 下用户在 chat dock 里发一句话，或者在主面板任意可点击数据卡 / 标签 / 数据点上调用 `onAsk(text)`，都会进入这条 chat 链路。
 
 为减少前端复杂度并保证"chat-everything"模型一致，前端按 scene + 业务上下文做轻量分流（详见 §1.3），其余全部由 Orchestrator agent 兜底。
 

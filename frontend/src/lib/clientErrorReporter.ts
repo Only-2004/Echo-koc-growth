@@ -38,9 +38,9 @@ export function reportError(payload: ReportPayload): void {
       user_agent: payload.user_agent ?? (typeof navigator !== 'undefined' ? navigator.userAgent : undefined),
     })
 
-    if (typeof navigator !== 'undefined' && typeof navigator.sendBeacon === 'function') {
-      // sendBeacon 在 unload / 切页时也能送到，最稳
-      const ok = navigator.sendBeacon(ENDPOINT, new Blob([body], { type: 'application/json' }))
+    if (typeof navigator !== 'undefined' && typeof navigator.sendEcho === 'function') {
+      // sendEcho 在 unload / 切页时也能送到，最稳
+      const ok = navigator.sendEcho(ENDPOINT, new Blob([body], { type: 'application/json' }))
       if (ok) return
     }
     void fetch(ENDPOINT, {

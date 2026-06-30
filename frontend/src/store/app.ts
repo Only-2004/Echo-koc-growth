@@ -1,5 +1,5 @@
 /**
- * Beacon 全局状态（Zustand）
+ * Echo 全局状态（Zustand）
  *
  * M2 初版只覆盖 scene + chat dock + profileReady gate；
  * M4-M6 闭环扩展了三个 agent 的会话句柄。

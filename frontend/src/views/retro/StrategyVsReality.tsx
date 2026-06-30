@@ -2,7 +2,7 @@
  * StrategyVsReality - 「发布前的策略假设」 vs 「发生了什么」。
  *
  * dashed 假设面板（左）+ solid 实际面板（右）+ 中间 ArrowRight 圆形指示。
- * 这是 Beacon 的核心契约视觉：strategy snapshot → retro report 的归因映射。
+ * 这是 Echo 的核心契约视觉：strategy snapshot → retro report 的归因映射。
  */
 
 import { ArrowRight } from 'lucide-react'

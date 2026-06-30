@@ -1,5 +1,5 @@
 /**
- * Beacon · App 入口
+ * Echo · App 入口
  *
  * Shell 包住 SceneRouter。Boot 时调 GET /api/profile/status 同步 profileReady：
  * - exists=true  → 加载最新 profile，setProfileReady(true)

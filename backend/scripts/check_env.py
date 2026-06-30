@@ -57,7 +57,7 @@ def main() -> int:
     _load_dotenv_from_project_root()
 
     print("=" * 60)
-    print("Beacon 配置自检（不回显原文）")
+    print("Echo 配置自检（不回显原文）")
     print("=" * 60)
 
     missing = 0

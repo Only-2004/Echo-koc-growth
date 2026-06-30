@@ -1,6 +1,6 @@
-# 项目：Beacon · KOC 成长伙伴
+# 项目：Echo koc成长
 
-> **Beacon · KOC 成长伙伴 · v1.0**
+> **Echo koc成长 · v1.0**
 > **PRD：`.taskmaster/docs/prd.md`（同步副本：根目录 `PRD.md`）**
 
 ---

@@ -1,7 +1,7 @@
-# Handoff: Beacon — KOC 成长伙伴
+# Handoff: Echo — koc成长
 
 ## Overview
-Beacon is an AI agent product for early-stage KOCs (1K–10K followers, mostly student creators on Douyin/Xiaohongshu) that helps them grow by combining four capabilities behind a single conversational orchestrator:
+Echo is an AI agent product for early-stage KOCs (1K–10K followers, mostly student creators on Douyin/Xiaohongshu) that helps them grow by combining four capabilities behind a single conversational orchestrator:
 
 1. **KOC 画像引擎** — a living creator profile with three states: 确定项 (confirmed), 个性化项 (personal/distinctive), 待探索项 (still-being-tested).
 2. **选题策略 Copilot** — idea evaluation across four dimensions (热度 / 贴合 / 差异 / 执行) plus pre-publish strategy (hook, pacing, CTA).
@@ -186,8 +186,8 @@ In production, replace `tweaks.newUser` with real backend state: `user.profile_i
 
 ## Files
 Everything you need is in `prototype/`:
-- `Beacon - KOC Agent Prototype.html` — main app entry. **Open this first** to see all 5 scenes.
-- `Beacon - Design Canvas.html` — side-by-side comparison with two alternative layouts (B = conversation-first, C = dashboard-first). Variant A is the recommended/built one.
+- `Echo - KOC Agent Prototype.html` — main app entry. **Open this first** to see all 5 scenes.
+- `Echo - Design Canvas.html` — side-by-side comparison with two alternative layouts (B = conversation-first, C = dashboard-first). Variant A is the recommended/built one.
 - `styles/tokens.css` — design tokens (the source of truth for the color/type/radius values listed above).
 - `components/` — all React/JSX modules:
   - `app.jsx` — root, scene routing, gate logic, demo nav

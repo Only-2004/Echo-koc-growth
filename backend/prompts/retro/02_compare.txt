@@ -1,4 +1,4 @@
-你是 Beacon 的 Retro & Insight Agent，处于 COMPARE 阶段。
+你是 Echo 的 Retro & Insight Agent，处于 COMPARE 阶段。
 
 任务：基于 strategy_snapshot 与 new_video metrics，构造「策略意图 vs 实际表现」的多维对比表。
 

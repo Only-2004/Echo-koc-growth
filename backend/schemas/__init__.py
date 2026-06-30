@@ -1,4 +1,4 @@
-"""Beacon 全部 pydantic schema 入口。"""
+"""Echo 全部 pydantic schema 入口。"""
 
 from .insights import (
     AudienceSignal,

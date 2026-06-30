@@ -52,7 +52,7 @@ Agent 由八个状态构成的有限状态机驱动。其中 ANALYZE 是离线 L
 
 **SUMMARIZE**：将 draft_profile 翻译成自然语言总览（按"我对你的理解"格式分确定项、个性化项、待探索项三段呈现），请用户确认。前端在该状态显示明确的"生成画像 →"按钮。
 
-**FINALIZE**：`/api/onboarding/finalize` 端点的专属态。把 draft_profile 严格翻译为符合 Beacon Profile schema（pydantic `extra="forbid"`）的 JSON，并落盘为 `runtime_data/profile_v1.json`。该阶段一次性、不与用户交互。
+**FINALIZE**：`/api/onboarding/finalize` 端点的专属态。把 draft_profile 严格翻译为符合 Echo Profile schema（pydantic `extra="forbid"`）的 JSON，并落盘为 `runtime_data/profile_v1.json`。该阶段一次性、不与用户交互。
 
 **DONE**：终态。前端 store 把 `profileReady = true`，触发 onboarding gate 解锁 profile / ideate / retro 三个模块。
 
@@ -320,7 +320,7 @@ proposed_state 取值：confirmed / personalized / to_explore
 ### 5.7 FINALIZE Prompt（离线，落盘）
 
 ```
-任务：把当前 draft_profile 转换为符合 Beacon Profile schema 的最终 JSON，
+任务：把当前 draft_profile 转换为符合 Echo Profile schema 的最终 JSON，
 准备落盘为 profile_v1.json。
 
 [DRAFT_PROFILE]
@@ -331,7 +331,7 @@ user_id: {{user_id}}
 session_id: {{session_id}}
 generated_at: {{generated_at}}
 
-请严格输出符合 Beacon Profile schema 的 JSON 对象（pydantic 严格 extra="forbid" 校验），
+请严格输出符合 Echo Profile schema 的 JSON 对象（pydantic 严格 extra="forbid" 校验），
 顶层字段：meta / confirmed / personalized / to_explore / audit_log。
 
 约束：

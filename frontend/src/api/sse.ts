@@ -1,7 +1,7 @@
 /**
  * SSE POST 客户端（M4-M6 闭环新增）
  *
- * 浏览器原生 EventSource 只支持 GET，但 Beacon 三个 agent 的 SSE 端点都是 POST
+ * 浏览器原生 EventSource 只支持 GET，但 Echo 三个 agent 的 SSE 端点都是 POST
  * （/api/onboarding/turn /api/strategy/submit /api/retro/load 等）。
  * 因此用 fetch + ReadableStream 自己解析 SSE 帧。
  *

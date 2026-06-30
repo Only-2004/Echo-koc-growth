@@ -1,5 +1,5 @@
 /**
- * Beacon · 左侧导航
+ * Echo · 左侧导航
  *
  * - logo + wordmark
  * - 4 nav 按钮（首页 / 我的画像 / 选题策略 / 复盘）
@@ -34,7 +34,7 @@ export function SideNav() {
     <div className="flex flex-col h-full p-4 gap-6">
       <div className="flex items-center gap-2 px-2">
         <Sparkles size={20} className="text-accent" />
-        <span className="font-semibold tracking-tight text-fg-0">Beacon</span>
+        <span className="font-semibold tracking-tight text-fg-0">Echo</span>
       </div>
 
       <div className="space-y-1">

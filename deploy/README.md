@@ -1,4 +1,4 @@
-# Beacon 部署 Runbook
+# Echo 部署 Runbook
 
 > 腾讯云轻量应用服务器（2vCPU/4GB/60GB）· Ubuntu 22.04 · Docker Compose
 
@@ -124,7 +124,7 @@ curl https://43-134-72-220.nip.io/api/health
 # 期望：{"ok":true,"service":"beacon-backend","version":"0.1.0"}
 
 # 3. 浏览器访问 https://43-134-72-220.nip.io
-# 期望：地址栏锁标 + Beacon 主页
+# 期望：地址栏锁标 + Echo 主页
 
 # 4. 容器状态
 docker compose -f docker-compose.yml -f deploy/docker-compose.prod.yml ps
@@ -297,7 +297,7 @@ $COMPOSE exec frontend ls /usr/share/nginx/html
 | 范围 | 用途 |
 |---|---|
 | `80, 443` | 唯一公网入口（共享 nginx） |
-| `8000-8099` | Beacon backend / 子服务 |
+| `8000-8099` | Echo backend / 子服务 |
 | `8100-8199` | Agent 2 |
 | `8200-8299` | Agent 3 |
 | ... | ... |
@@ -308,7 +308,7 @@ $COMPOSE exec frontend ls /usr/share/nginx/html
 
 | 域名 | 路由到 |
 |---|---|
-| `beacon.43-134-72-220.nip.io` | Beacon |
+| `beacon.43-134-72-220.nip.io` | Echo |
 | `agent2.43-134-72-220.nip.io` | Agent 2 |
 
 > 注：nip.io 的 `*.43-134-72-220.nip.io` 和 `43-134-72-220.nip.io` 都自动解析到 43.134.72.220，子域无需任何 DNS 配置。
@@ -325,7 +325,7 @@ $COMPOSE exec frontend ls /usr/share/nginx/html
    docker network create koc-shared 2>/dev/null || true
    ```
 3. 修改 agent2 的 docker-compose 让它加入 `koc-shared` 网络
-4. 让 Beacon 的 nginx 容器也加入 `koc-shared`（在 deploy/docker-compose.prod.yml 加 `networks` 段）
+4. 让 Echo 的 nginx 容器也加入 `koc-shared`（在 deploy/docker-compose.prod.yml 加 `networks` 段）
 5. 在 `deploy/nginx.conf` 加新的 server 块：
    ```nginx
    server {
